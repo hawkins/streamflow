@@ -1,6 +1,8 @@
 import React from 'react';
+import { observer } from 'mobx-react';
 import 'twitch-embed';
 
+@observer
 class TwitchVideoEmbed extends React.Component {
   constructor(props) {
     super(props);
@@ -25,8 +27,6 @@ class TwitchVideoEmbed extends React.Component {
   componentWillReceiveProps(nextProps) {
     this.setId();
     this.setPlayer();
-
-    //can check for props and call player functions here
   }
 
   setId() {

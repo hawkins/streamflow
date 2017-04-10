@@ -1,24 +1,56 @@
 import React, { Component } from 'react';
-import TwitchVideoEmbed from './components/Twitch';
+import styled, { keyframes } from 'styled-components';
+import Header from './components/Header';
+import Sidebar from './components/Sidebar';
+import Player from './components/Player';
 import logo from './logo.svg';
-import './App.css';
+
+const rotate360 = keyframes`
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+`;
+
+const Container = styled.div`
+  text-align: center;
+`;
+
+const Spinner = styled.div`
+  animation: ${rotate360} infinite 20s linear;;
+`;
+
+const Logo = styled.img`
+  height: 80px;
+`;
+
+const Title = styled.div`
+  background-color: #222;
+  height: 150px;
+  padding: 20px;
+  color: white;
+`;
+
+const Greeting = styled.p`
+  font-size: large;
+`;
 
 class App extends Component {
   render() {
+    const { store } = this.props;
     return (
-      <div className="App">
-        <div className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
+      <Container>
+        <Header />
+        <Sidebar store={store} />
+        <Title>
+          <Spinner>
+            <Logo src={logo} alt="logo" />
+          </Spinner>
           <h2>Welcome to Twitch Flow</h2>
-        </div>
-        <p className="App-intro">
+        </Title>
+        <Greeting>
           Hello Electron!
-        </p>
-        <TwitchVideoEmbed channel="cohhcarnage"/>
-        <TwitchVideoEmbed channel="loserfruit"/>
-        <TwitchVideoEmbed channel="koalibears"/>
-        <TwitchVideoEmbed channel="aimbotcalvin"/>
-      </div>
+        </Greeting>
+        <Player store={store} />
+      </Container>
     );
   }
 }
