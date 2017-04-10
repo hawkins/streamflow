@@ -1,8 +1,12 @@
-import mobx, { observable } from 'mobx';
+import { observable } from 'mobx';
 
 export default class Store {
   @observable channel = 'cohhcarnage';
   @observable favorites = ['cohhcarnage', 'loserfruit', 'koalibears', 'aimbotcalvin'];
+
+  constructor() {
+    this.setChannel = this.setChannel.bind(this);
+  }
 
   setChannel(channel) {
     this.channel = channel;

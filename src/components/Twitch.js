@@ -1,9 +1,9 @@
-import React from 'react';
+import React, { Component } from 'react';
 import { observer } from 'mobx-react';
 import 'twitch-embed';
 
 @observer
-class TwitchVideoEmbed extends React.Component {
+export default class TwitchVideoEmbed extends Component {
   constructor(props) {
     super(props);
     this.player = null;
@@ -11,6 +11,10 @@ class TwitchVideoEmbed extends React.Component {
       id: null
     };
   }
+
+  static propTypes = {
+    channel: React.PropTypes.string
+  };
 
   componentWillMount() {
     this.setId();
@@ -31,32 +35,21 @@ class TwitchVideoEmbed extends React.Component {
 
   setId() {
     if (!this.state.id) {
-      if (this.props.channel) {
-        this.channel = true;
-        this.setState({
-          id: `twitch-${this.props.channel}`
-        });
-      }
-      if (this.props.video) {
-        this.channel = false;
-        this.setState({
-          id: `twitch-${this.props.video}`
-        });
-      }
+      this.setState({
+        id: `twitch-${this.props.channel}`
+      });
     }
   }
 
   setPlayer() {
     if (!this.player) {
-      const options = {};
-      if (this.channel) {
-        options.channel = this.props.channel;
-      } else {
-        options.video = this.props.video;
+      if (typeof window !== 'undefined' && window.Twitch) {
+        this.player = new window.Twitch.Player(this.state.id, {
+          channel: this.props.channel
+        });
       }
-
-      if (window.Twitch)
-        this.player = new window.Twitch.Player(this.state.id, options);
+    } else {
+      this.player.setChannel(this.props.channel);
     }
   }
 
@@ -64,11 +57,3 @@ class TwitchVideoEmbed extends React.Component {
     return <div id={this.state.id || ''} className="twitch-video-embed" />;
   }
 }
-
-TwitchVideoEmbed.propTypes = {
-  channel: React.PropTypes.string,
-  video: React.PropTypes.string,
-  play: React.PropTypes.bool
-};
-
-export default TwitchVideoEmbed;
