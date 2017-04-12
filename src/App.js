@@ -1,5 +1,8 @@
 import React, { Component } from 'react';
 import styled, { keyframes } from 'styled-components';
+import ThemeProvider from 'react-toolbox/lib/ThemeProvider';
+import theme from './toolbox/theme';
+import './toolbox/theme.css';
 import Header from './components/Header';
 import Sidebar from './components/Sidebar';
 import Player from './components/Player';
@@ -44,22 +47,24 @@ class App extends Component {
   render() {
     const { store } = this.props;
     return (
-      <Container>
-        <Header />
-        <Sidebar store={store} />
-        <Content>
-          <Title>
-            <Spinner>
-              <Logo src={logo} alt="logo" />
-            </Spinner>
-            <h2>Welcome to Twitch Flow</h2>
-          </Title>
-          <Greeting>
-            Hello Electron!
-          </Greeting>
-          <Player store={store} />
-        </Content>
-      </Container>
+      <ThemeProvider theme={theme}>
+        <Container>
+          <Header />
+          <Sidebar store={store} />
+          <Content>
+            <Title>
+              <Spinner>
+                <Logo src={logo} alt="logo" />
+              </Spinner>
+              <h2>Welcome to Twitch Flow</h2>
+            </Title>
+            <Greeting>
+              Hello Electron!
+            </Greeting>
+            <Player store={store} />
+          </Content>
+        </Container>
+      </ThemeProvider>
     );
   }
 }

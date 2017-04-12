@@ -1,6 +1,12 @@
 import React, { Component } from 'react';
 import { observer } from 'mobx-react';
 import styled from 'styled-components';
+import {
+  Card,
+  CardTitle,
+  CardActions
+} from 'react-toolbox/lib/card';
+import Button from 'react-toolbox/lib/button/Button';
 
 const Side = styled.div`
   position: absolute;
@@ -11,12 +17,16 @@ const Side = styled.div`
   flex-direction: column;
 `;
 
-const Item = styled.div`
+const StreamerCard = ({ streamer, callback }) => (
+  <Card>
+    <CardTitle title={streamer} />
+    <CardActions>
+      <Button raised label="Watch" value={streamer} onClick={callback} />
+    </CardActions>
+  </Card>
+);
 
-`;
-
-@observer
-class Sidebar extends Component {
+@observer class Sidebar extends Component {
   constructor() {
     super();
     this.handleFavoriteClick = this.handleFavoriteClick.bind(this);
@@ -30,7 +40,9 @@ class Sidebar extends Component {
     return (
       <Side>
         <h3>Favorites</h3>
-        {this.props.store.favorites.map(item => (<button value={item} onClick={this.handleFavoriteClick}>{item}</button>))}
+        {this.props.store.favorites.map(item => (
+          <StreamerCard key={item} streamer={item} callback={this.handleFavoriteClick} />
+        ))}
       </Side>
     );
   }
