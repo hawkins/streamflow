@@ -33,6 +33,13 @@ const Greeting = styled.p`
   font-size: large;
 `;
 
+const Content = styled.div`
+  position: absolute;
+  right: 0;
+  top: 80px;
+  width: calc(100% - 200px);
+`;
+
 class App extends Component {
   render() {
     const { store } = this.props;
@@ -40,16 +47,18 @@ class App extends Component {
       <Container>
         <Header />
         <Sidebar store={store} />
-        <Title>
-          <Spinner>
-            <Logo src={logo} alt="logo" />
-          </Spinner>
-          <h2>Welcome to Twitch Flow</h2>
-        </Title>
-        <Greeting>
-          Hello Electron!
-        </Greeting>
-        <Player store={store} />
+        <Content>
+          <Title>
+            <Spinner>
+              <Logo src={logo} alt="logo" />
+            </Spinner>
+            <h2>Welcome to Twitch Flow</h2>
+          </Title>
+          <Greeting>
+            Hello Electron!
+          </Greeting>
+          <Player store={store} />
+        </Content>
       </Container>
     );
   }
