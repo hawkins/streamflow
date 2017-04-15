@@ -6,7 +6,7 @@ const Content = styled.div`
   position: absolute;
   right: 0;
   top: 80px;
-  width: calc(100% - 200px);
+  width: calc(100% - 260px);
   height: calc(100% - 80px);
 `;
 
