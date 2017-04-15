@@ -9,7 +9,7 @@ import Main from './components/Main';
 
 const Container = styled.div`
   text-align: center;
-  height: calc(100% - 80px);
+  height: 100%;
 `;
 
 class App extends Component {

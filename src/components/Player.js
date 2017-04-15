@@ -11,6 +11,7 @@ import { observer } from 'mobx-react';
         height="100%"
         allowFullScreen="true"
         frameBorder="0"
+        style={{ display: 'block' }}
       />
     );
   }

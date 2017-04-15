@@ -3,11 +3,9 @@ import styled from 'styled-components';
 import Player from './Player';
 
 const Content = styled.div`
-  position: absolute;
-  right: 0;
-  top: 80px;
+  float: right;
+  height: 100vh;
   width: calc(100% - 260px);
-  height: calc(100% - 80px);
 `;
 
 export default class Main extends Component {

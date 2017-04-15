@@ -6,14 +6,12 @@ import Button from 'react-toolbox/lib/button/Button';
 import Request from 'react-http-request';
 
 const Side = styled.div`
-  position: absolute;
-  left: 0;
-  top: 80px;
+  float:left;
   width: 260px;
   display: flex;
   flex-direction: column;
   background-color: #4d4d4d;
-  height: calc(100% - 80px);
+  height: 100vh
   color: #ecf0f1;
   overflow-y: auto;
 `;
@@ -23,7 +21,7 @@ const StyledCard = styled(Card)`
   color: #ecf0f1;
   margin: 10px;
   width: calc(100% - 20px);
-  flex-shrink: 0;
+  flex: 0 0 auto;
 `;
 
 const StreamerCard = ({ streamer, callback, picture, status }) => (
@@ -53,7 +51,7 @@ const StreamerCard = ({ streamer, callback, picture, status }) => (
   render() {
     return (
       <Side>
-        <h3>Favorites</h3>
+        <h2>Favorites</h2>
         {this.props.store.favorites.map(item => (
           <Request
             url={`https://api.twitch.tv/kraken/channels/${item}`}
