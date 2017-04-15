@@ -1000,18 +1000,18 @@ browserify-zlib@^0.1.4:
   dependencies:
     pako "~0.2.0"
 
-browserslist@^1.0.0, browserslist@^1.3.6, browserslist@^1.5.2:
+browserslist@^1.0.0, browserslist@^1.3.6, browserslist@^1.4.0, browserslist@~1.4.0:
+  version "1.4.0"
+  resolved "https://registry.yarnpkg.com/browserslist/-/browserslist-1.4.0.tgz#9cfdcf5384d9158f5b70da2aa00b30e8ff019049"
+  dependencies:
+    caniuse-db "^1.0.30000539"
+
+browserslist@^1.5.2:
   version "1.7.7"
   resolved "https://registry.yarnpkg.com/browserslist/-/browserslist-1.7.7.tgz#0bd76704258be829b2398bb50e4b62d1a166b0b9"
   dependencies:
     caniuse-db "^1.0.30000639"
     electron-to-chromium "^1.2.7"
-
-browserslist@^1.4.0, browserslist@~1.4.0:
-  version "1.4.0"
-  resolved "https://registry.yarnpkg.com/browserslist/-/browserslist-1.4.0.tgz#9cfdcf5384d9158f5b70da2aa00b30e8ff019049"
-  dependencies:
-    caniuse-db "^1.0.30000539"
 
 bser@1.0.2:
   version "1.0.2"
@@ -5729,10 +5729,6 @@ tunnel-agent@^0.6.0:
 tweetnacl@^0.14.3, tweetnacl@~0.14.0:
   version "0.14.5"
   resolved "https://registry.yarnpkg.com/tweetnacl/-/tweetnacl-0.14.5.tgz#5ae68177f192d4456269d108afa93ff8743f4f64"
-
-twitch-embed@^1.1.3:
-  version "1.1.4"
-  resolved "https://registry.yarnpkg.com/twitch-embed/-/twitch-embed-1.1.4.tgz#c213f27927edf073fa9fff5818f652f3c799277c"
 
 type-check@~0.3.2:
   version "0.3.2"

@@ -56,8 +56,7 @@
     "react-dom": "^15.4.2",
     "react-toolbox": "^2.0.0-beta.8",
     "react-toolbox-themr": "^1.0.2",
-    "styled-components": "^1.4.4",
-    "twitch-embed": "^1.1.3"
+    "styled-components": "^1.4.4"
   },
   "homepage": "./",
   "main": "src/electron-starter.js",
