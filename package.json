@@ -49,12 +49,12 @@
     "whatwg-fetch": "1.0.0"
   },
   "dependencies": {
+    "axios": "^0.16.1",
     "electron": "^1.6.2",
     "mobx": "^3.1.9",
     "mobx-react": "^4.1.7",
     "react": "^15.4.2",
     "react-dom": "^15.4.2",
-    "react-http-request": "^1.0.3",
     "react-toolbox": "^2.0.0-beta.8",
     "react-toolbox-themr": "^1.0.2",
     "styled-components": "^1.4.4"
