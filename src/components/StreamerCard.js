@@ -41,7 +41,6 @@ const MaterialCard = ({ streamer, onClick, picture, status, onRemove }) => (
     super();
 
     this.state = {
-      streamsData: null,
       channelData: null,
       loading: true,
       error: null
@@ -68,43 +67,18 @@ const MaterialCard = ({ streamer, onClick, picture, status, onRemove }) => (
       }
     };
 
-    console.log(`Fetching information for ${streamer}`);
+    console.log(`Fetching status and picture information for ${streamer}`);
 
     axios
       .get(`https://api.twitch.tv/kraken/channels/${streamer}`, config)
       .then(res => {
         this.setState({
-          channelsData: res.data
+          channelsData: res.data,
+          loading: false
         });
-
-        if (this.state.streamsData) {
-          this.setState({
-            loading: false
-          });
-        }
       })
       .catch(error => {
-        console.log(error);
-        this.setState({
-          error: JSON.stringify(error)
-        });
-      });
-
-    axios
-      .get(`https://api.twitch.tv/kraken/streams/${streamer}`, config)
-      .then(res => {
-        this.setState({
-          streamsData: res.data
-        });
-
-        if (this.state.channelsData) {
-          this.setState({
-            loading: false
-          });
-        }
-      })
-      .catch(error => {
-        console.log(error);
+        console.error(error);
         this.setState({
           error: JSON.stringify(error)
         });
@@ -113,13 +87,10 @@ const MaterialCard = ({ streamer, onClick, picture, status, onRemove }) => (
 
   componentDidMount() {
     this.fetchInformation();
-
-    // Fetch information periodically
-    setInterval(this.fetchInformation, 300000);
   }
 
   render() {
-    const { streamer } = this.props;
+    const { streamer, isOnline } = this.props;
 
     if (this.state.error) {
       return (
@@ -138,8 +109,6 @@ const MaterialCard = ({ streamer, onClick, picture, status, onRemove }) => (
         />
       );
     }
-
-    const isOnline = this.state.streamsData.stream !== null;
 
     return (
       <MaterialCard

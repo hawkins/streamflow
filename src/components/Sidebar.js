@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { observer } from 'mobx-react';
 import styled from 'styled-components';
 import Controls from './Controls';
-import StreamerCard from './StreamerCard';
+import FavoriteStreamers from './FavoriteStremers';
 
 const Side = styled.div`
   float:left;
@@ -21,10 +21,7 @@ const Side = styled.div`
     return (
       <Side>
         <Controls store={store} />
-        <h2>Favorites</h2>
-        {this.props.store.favorites.map(item => (
-          <StreamerCard key={item} streamer={item} store={store} />
-        ))}
+        <FavoriteStreamers store={store} />
       </Side>
     );
   }
