@@ -20,4 +20,9 @@ export default class Store {
     const index = this.favorites.indexOf(channel);
     if (index !== -1) this.favorites.splice(index, 1);
   }
+
+  loadConfig(config) {
+    this.favorites = config.favorites;
+    this.channel = config.favorites[0];
+  }
 }

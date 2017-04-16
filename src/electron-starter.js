@@ -1,11 +1,42 @@
-const electron = require('electron');
-// Module to control application life.
-const app = electron.app;
-// Module to create native browser window.
-const BrowserWindow = electron.BrowserWindow;
-
+const { app, BrowserWindow, ipcMain } = require('electron');
 const path = require('path');
 const url = require('url');
+const fs = require('fs');
+const os = require('os');
+
+const CONFIG_FILE_PATH = `${os.homedir()}/.twitch-flow.json`;
+let config = undefined;
+
+function loadConfig() {
+  // Load in config or create it if it does not exist
+  fs.exists(CONFIG_FILE_PATH, exists => {
+    if (exists) {
+      // Load the file
+      fs.readFile(CONFIG_FILE_PATH, (err, data) => {
+        if (err) {
+          throw err;
+        } else {
+          config = JSON.parse(data);
+          console.log('Loaded config', config);
+          mainWindow.webContents.send('config', config);
+        }
+      });
+    } else {
+      // Write the file
+      config = {
+        favorites: ['cohhcarnage', 'loserfruit', 'koalibears', 'aimbotcalvin']
+      };
+      fs.writeFile(CONFIG_FILE_PATH, JSON.stringify(config), (err, data) => {
+        if (err) {
+          throw err;
+        } else {
+          console.log('Wrote config', config);
+          mainWindow.webContents.send('config', config);
+        }
+      });
+    }
+  });
+}
 
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
@@ -15,8 +46,7 @@ function createWindow() {
   // Create the browser window.
   mainWindow = new BrowserWindow({
     width: 800,
-    height: 600,
-    webPreferences: { nodeIntegration: false }
+    height: 600
   });
 
   // and load the index.html of the app.
@@ -28,9 +58,6 @@ function createWindow() {
     });
   mainWindow.loadURL(startUrl);
 
-  // Open the DevTools.
-  mainWindow.webContents.openDevTools();
-
   // Emitted when the window is closed.
   mainWindow.on('closed', function() {
     // Dereference the window object, usually you would store windows
@@ -38,6 +65,9 @@ function createWindow() {
     // when you should delete the corresponding element.
     mainWindow = null;
   });
+
+  // Handle client requesting user config
+  ipcMain.on('config request', loadConfig);
 }
 
 // This method will be called when Electron has finished
