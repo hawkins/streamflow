@@ -16,28 +16,14 @@ const Side = styled.div`
 `;
 
 @observer class Sidebar extends Component {
-  constructor() {
-    super();
-
-    this.handleFavoriteClick = this.handleFavoriteClick.bind(this);
-    this.handleNewFavoriteClick = this.handleNewFavoriteClick.bind(this);
-  }
-
-  handleFavoriteClick(e) {
-    this.props.store.setChannel(e.target.value);
-  }
-
-  handleNewFavoriteClick(newFavorite) {
-    this.props.store.addFavorite(newFavorite);
-  }
-
   render() {
+    const { store } = this.props;
     return (
       <Side>
-        <Controls onClick={this.handleNewFavoriteClick} />
+        <Controls store={store} />
         <h2>Favorites</h2>
         {this.props.store.favorites.map(item => (
-          <StreamerCard key={item} streamer={item} store={this.props.store} />
+          <StreamerCard key={item} streamer={item} store={store} />
         ))}
       </Side>
     );
