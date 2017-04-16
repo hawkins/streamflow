@@ -31,12 +31,7 @@ const MaterialCard = ({ streamer, onClick, picture, status, onRemove }) => (
             onClick={onClick}
           />
         : null}
-      <Button
-        raised
-        label="Remove"
-        value={streamer}
-        onClick={onRemove}
-      />
+      <Button raised label="Remove" value={streamer} onClick={onRemove} />
     </CardActions>
   </StyledCard>
 );
@@ -54,6 +49,7 @@ const MaterialCard = ({ streamer, onClick, picture, status, onRemove }) => (
 
     this.handleFavoriteClick = this.handleFavoriteClick.bind(this);
     this.handleRemoveClick = this.handleRemoveClick.bind(this);
+    this.fetchInformation = this.fetchInformation.bind(this);
   }
 
   handleFavoriteClick(e) {
@@ -64,13 +60,15 @@ const MaterialCard = ({ streamer, onClick, picture, status, onRemove }) => (
     this.props.store.removeFavorite(e.target.value);
   }
 
-  componentDidMount() {
+  fetchInformation() {
     const { streamer } = this.props;
     const config = {
       headers: {
         'Client-ID': 'gc6rul66vivvwv6qwj98v529l9mpyo'
       }
     };
+
+    console.log(`Fetching information for ${streamer}`);
 
     axios
       .get(`https://api.twitch.tv/kraken/channels/${streamer}`, config)
@@ -111,6 +109,13 @@ const MaterialCard = ({ streamer, onClick, picture, status, onRemove }) => (
           error: JSON.stringify(error)
         });
       });
+  }
+
+  componentDidMount() {
+    this.fetchInformation();
+
+    // Fetch information periodically
+    setInterval(this.fetchInformation, 300000);
   }
 
   render() {
