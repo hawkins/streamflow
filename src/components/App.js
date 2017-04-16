@@ -1,11 +1,11 @@
 import React, { Component } from 'react';
 import styled from 'styled-components';
 import ThemeProvider from 'react-toolbox/lib/ThemeProvider';
-import theme from './toolbox/theme';
-import './toolbox/theme.css';
-import Header from './components/Header';
-import Sidebar from './components/Sidebar';
-import Main from './components/Main';
+import theme from '../toolbox/theme';
+import '../toolbox/theme.css';
+import Header from './Header';
+import Sidebar from './Sidebar';
+import Main from './Main';
 
 const Container = styled.div`
   text-align: center;
