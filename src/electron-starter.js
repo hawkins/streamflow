@@ -26,14 +26,20 @@ function loadConfig() {
       config = {
         favorites: ['cohhcarnage', 'loserfruit', 'koalibears', 'aimbotcalvin']
       };
-      fs.writeFile(CONFIG_FILE_PATH, JSON.stringify(config), (err, data) => {
-        if (err) {
-          throw err;
-        } else {
-          console.log('Wrote config', config);
-          mainWindow.webContents.send('config', config);
-        }
+      saveConfig(config, data => {
+        console.log('Wrote config', data);
+        mainWindow.webContents.send('config', data);
       });
+    }
+  });
+}
+
+function saveConfig(data, callback) {
+  fs.writeFile(CONFIG_FILE_PATH, JSON.stringify(data), err => {
+    if (err) {
+      throw err;
+    } else {
+      if (callback) callback(data);
     }
   });
 }
@@ -68,6 +74,14 @@ function createWindow() {
 
   // Handle client requesting user config
   ipcMain.on('config request', loadConfig);
+
+  // Handle client requesting to save config
+  ipcMain.on('config save', (e, data) => {
+    saveConfig(data, data => {
+      config = data;
+      console.log('Wrote config', config);
+    });
+  });
 }
 
 // This method will be called when Electron has finished

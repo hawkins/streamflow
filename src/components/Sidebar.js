@@ -4,6 +4,7 @@ import styled from 'styled-components';
 import { Card, CardTitle, CardActions, CardText } from 'react-toolbox/lib/card';
 import Button from 'react-toolbox/lib/button/Button';
 import Request from 'react-http-request';
+import Controls from './Controls';
 
 const Side = styled.div`
   float:left;
@@ -41,16 +42,23 @@ const StreamerCard = ({ streamer, callback, picture, status }) => (
 @observer class Sidebar extends Component {
   constructor() {
     super();
+
     this.handleFavoriteClick = this.handleFavoriteClick.bind(this);
+    this.handleNewFavoriteClick = this.handleNewFavoriteClick.bind(this);
   }
 
   handleFavoriteClick(e) {
     this.props.store.setChannel(e.target.value);
   }
 
+  handleNewFavoriteClick(newFavorite) {
+    this.props.store.addFavorite(newFavorite);
+  }
+
   render() {
     return (
       <Side>
+        <Controls onClick={this.handleNewFavoriteClick} />
         <h2>Favorites</h2>
         {this.props.store.favorites.map(item => (
           <Request
