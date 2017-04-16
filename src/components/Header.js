@@ -1,6 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
-import logo from '../Glitch_Black_RGB.svg';
+import logo from '../assets/Glitch_Black_RGB.svg';
 
 const headerSize = '80px';
 

@@ -1,9 +1,9 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import App from './App';
+import App from './components/App';
 import Store from './store';
 const { ipcRenderer } = window.require('electron');
-import './index.css';
+import './assets/index.css';
 
 var store = new Store(ipcRenderer);
 
