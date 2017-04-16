@@ -13,7 +13,7 @@ const StyledCard = styled(Card)`
   flex: 0 0 auto;
 `;
 
-const MaterialCard = ({ streamer, callback, picture, status }) => (
+const MaterialCard = ({ streamer, onClick, picture, status, onRemove }) => (
   <StyledCard raised>
     {picture
       ? <CardTitle title={streamer} avatar={picture} />
@@ -21,11 +21,23 @@ const MaterialCard = ({ streamer, callback, picture, status }) => (
     <CardText>
       {status}
     </CardText>
-    {callback
-      ? <CardActions>
-          <Button raised label="Watch" value={streamer} onClick={callback} />
-        </CardActions>
-      : null}
+    <CardActions>
+      {onClick
+        ? <Button
+            raised
+            primary
+            label="Watch"
+            value={streamer}
+            onClick={onClick}
+          />
+        : null}
+      <Button
+        raised
+        label="Remove"
+        value={streamer}
+        onClick={onRemove}
+      />
+    </CardActions>
   </StyledCard>
 );
 
@@ -41,10 +53,15 @@ const MaterialCard = ({ streamer, callback, picture, status }) => (
     };
 
     this.handleFavoriteClick = this.handleFavoriteClick.bind(this);
+    this.handleRemoveClick = this.handleRemoveClick.bind(this);
   }
 
   handleFavoriteClick(e) {
     this.props.store.setChannel(e.target.value);
+  }
+
+  handleRemoveClick(e) {
+    this.props.store.removeFavorite(e.target.value);
   }
 
   componentDidMount() {
@@ -108,7 +125,13 @@ const MaterialCard = ({ streamer, callback, picture, status }) => (
     }
 
     if (this.state.loading) {
-      return <MaterialCard streamer={streamer} status="Loading..." />;
+      return (
+        <MaterialCard
+          streamer={streamer}
+          status="Loading..."
+          onRemove={this.handleRemoveClick}
+        />
+      );
     }
 
     const isOnline = this.state.streamsData.stream !== null;
@@ -116,9 +139,10 @@ const MaterialCard = ({ streamer, callback, picture, status }) => (
     return (
       <MaterialCard
         streamer={streamer}
-        callback={isOnline ? this.handleFavoriteClick : null}
         picture={this.state.channelsData.logo}
         status={this.state.channelsData.status}
+        onClick={isOnline ? this.handleFavoriteClick : null}
+        onRemove={this.handleRemoveClick}
       />
     );
   }
