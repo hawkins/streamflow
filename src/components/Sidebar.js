@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { observer } from 'mobx-react';
 import styled from 'styled-components';
+import Controls from './Controls';
 import StreamerCard from './StreamerCard';
 
 const Side = styled.div`
@@ -15,21 +16,14 @@ const Side = styled.div`
 `;
 
 @observer class Sidebar extends Component {
-  constructor() {
-    super();
-    this.handleFavoriteClick = this.handleFavoriteClick.bind(this);
-  }
-
-  handleFavoriteClick(e) {
-    this.props.store.setChannel(e.target.value);
-  }
-
   render() {
+    const { store } = this.props;
     return (
       <Side>
+        <Controls store={store} />
         <h2>Favorites</h2>
         {this.props.store.favorites.map(item => (
-          <StreamerCard key={item} streamer={item} store={this.props.store} />
+          <StreamerCard key={item} streamer={item} store={store} />
         ))}
       </Side>
     );
