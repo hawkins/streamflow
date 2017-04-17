@@ -39,18 +39,10 @@ import StreamerCard from './StreamerCard';
         axios.get(`https://api.twitch.tv/kraken/streams/${streamer}`, config))
     ).then(values => {
       // Get list of streamers names and whether they are online or not
-      let results = [];
-      for (let i = 0; i < values.length; i++) {
-        results.push({
-          streamer: favorites[i],
-          online: values[i].data.stream !== null
-        });
-      }
-
-      // Sort to display online streamers first
-      results.sort((x, y) => {
-        return x.online === y.online ? 0 : x.online ? -1 : 1;
-      });
+      let results = values.map((item, i) => ({
+        streamer: favorites[i],
+        online: item.data.stream !== null
+      }));
 
       this.setState({
         favorites: results
@@ -61,18 +53,40 @@ import StreamerCard from './StreamerCard';
   render() {
     const { store } = this.props;
     const { favorites } = this.state;
+    const onlineStreamers = favorites.filter(item => item.online);
+    const offlineStreamers = favorites.filter(item => !item.online);
 
     return (
       <div>
-        <h2>Favorites</h2>
-        {favorites.map(item => (
-          <StreamerCard
-            key={item.streamer}
-            streamer={item.streamer}
-            isOnline={item.online}
-            store={store}
-          />
-        ))}
+        <h2>Favorite Streamers</h2>
+        {onlineStreamers.length > 0
+          ? <div>
+              <h3>Live</h3>
+              {onlineStreamers.map(item => (
+                <StreamerCard
+                  key={item.streamer}
+                  streamer={item.streamer}
+                  isOnline={item.online}
+                  store={store}
+                />
+              ))}
+            </div>
+          : <span>
+              None of your favorite streamers are currently online! Maybe add some more?
+            </span>}
+        {offlineStreamers.length > 0
+          ? <div>
+              <h3>Offline</h3>
+              {offlineStreamers.map(item => (
+                <StreamerCard
+                  key={item.streamer}
+                  streamer={item.streamer}
+                  isOnline={item.online}
+                  store={store}
+                />
+              ))}
+            </div>
+          : null}
       </div>
     );
   }
