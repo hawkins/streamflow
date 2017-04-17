@@ -10,7 +10,7 @@ const Side = styled.div`
   display: flex;
   flex-direction: column;
   background-color: #4d4d4d;
-  height: 100vh
+  height: calc(100vh - 80px);
   color: #ecf0f1;
   overflow-y: auto;
 `;

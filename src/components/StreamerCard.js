@@ -5,7 +5,7 @@ import { Card, CardTitle, CardActions, CardText } from 'react-toolbox/lib/card';
 import Button from 'react-toolbox/lib/button/Button';
 import axios from 'axios';
 
-const StyledCard = styled(Card)`
+const OnlineCard = styled(Card)`
   background: #555555;
   color: #ecf0f1;
   margin: 10px;
@@ -13,28 +13,54 @@ const StyledCard = styled(Card)`
   flex: 0 0 auto;
 `;
 
-const MaterialCard = ({ streamer, onClick, picture, status, onRemove }) => (
-  <StyledCard raised>
-    {picture
-      ? <CardTitle title={streamer} avatar={picture} />
-      : <CardTitle title={streamer} />}
-    <CardText>
-      {status}
-    </CardText>
-    <CardActions>
-      {onClick
-        ? <Button
-            raised
-            primary
-            label="Watch"
-            value={streamer}
-            onClick={onClick}
-          />
-        : null}
-      <Button raised label="Remove" value={streamer} onClick={onRemove} />
-    </CardActions>
-  </StyledCard>
-);
+const OfflineCard = styled(Card)`
+  background: #444;
+  color: #c3c8c9;
+  margin: 10px;
+  width: calc(100% - 20px);
+  flex: 0 0 auto;
+`;
+
+const MaterialCard = ({ streamer, onClick, picture, status, onRemove }) => {
+  const children = (
+    <div>
+      {picture
+        ? <CardTitle title={streamer} avatar={picture} />
+        : <CardTitle title={streamer} />}
+      <CardText>
+        {status}
+      </CardText>
+      <CardActions>
+        {onClick
+          ? <Button
+              raised
+              primary
+              label="Watch"
+              value={streamer}
+              onClick={onClick}
+            />
+          : null}
+        <Button accent label="Remove" value={streamer} onClick={onRemove} />
+      </CardActions>
+    </div>
+  );
+
+  // Return appropriate online or offline card based on
+  // ... whether or not a link to watch the stream was provided
+  if (onClick) {
+    return (
+      <OnlineCard raised>
+        {children}
+      </OnlineCard>
+    );
+  } else {
+    return (
+      <OfflineCard raised>
+        {children}
+      </OfflineCard>
+    );
+  }
+};
 
 @observer class StreamerCard extends Component {
   constructor() {

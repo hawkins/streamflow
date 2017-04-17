@@ -4,7 +4,7 @@ import Player from './Player';
 
 const Content = styled.div`
   float: right;
-  height: 100vh;
+  height: calc(100vh - 80px);
   width: calc(100% - 260px);
 `;
 
