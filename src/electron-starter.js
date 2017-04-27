@@ -1,9 +1,5 @@
-const electron = require('electron');
-// Module to control application life.
-const app = electron.app;
-// Module to create native browser window.
-const BrowserWindow = electron.BrowserWindow;
-
+const { app, BrowserWindow } = require('electron');
+const { blockWindowAds } = require('electron-ad-blocker');
 const path = require('path');
 const url = require('url');
 
@@ -18,6 +14,9 @@ function createWindow() {
     height: 600,
     webPreferences: { nodeIntegration: false }
   });
+
+  // Black ads
+  blockWindowAds(mainWindow);
 
   // and load the index.html of the app.
   const startUrl = process.env.ELECTRON_START_URL ||
