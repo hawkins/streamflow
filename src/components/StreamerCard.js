@@ -5,7 +5,7 @@ import { Card, CardTitle, CardActions, CardText } from 'react-toolbox/lib/card';
 import Button from 'react-toolbox/lib/button/Button';
 import axios from 'axios';
 
-const StyledCard = styled(Card)`
+const OnlineCard = styled(Card)`
   background: #555555;
   color: #ecf0f1;
   margin: 10px;
@@ -13,35 +13,60 @@ const StyledCard = styled(Card)`
   flex: 0 0 auto;
 `;
 
-const MaterialCard = ({ streamer, onClick, picture, status, onRemove }) => (
-  <StyledCard raised>
-    {picture
-      ? <CardTitle title={streamer} avatar={picture} />
-      : <CardTitle title={streamer} />}
-    <CardText>
-      {status}
-    </CardText>
-    <CardActions>
-      {onClick
-        ? <Button
-            raised
-            primary
-            label="Watch"
-            value={streamer}
-            onClick={onClick}
-          />
-        : null}
-      <Button raised label="Remove" value={streamer} onClick={onRemove} />
-    </CardActions>
-  </StyledCard>
-);
+const OfflineCard = styled(Card)`
+  background: #444;
+  color: #c3c8c9;
+  margin: 10px;
+  width: calc(100% - 20px);
+  flex: 0 0 auto;
+`;
+
+const MaterialCard = ({ streamer, onClick, picture, status, onRemove }) => {
+  const children = (
+    <div>
+      {picture
+        ? <CardTitle title={streamer} avatar={picture} />
+        : <CardTitle title={streamer} />}
+      <CardText>
+        {status}
+      </CardText>
+      <CardActions>
+        {onClick
+          ? <Button
+              raised
+              primary
+              label="Watch"
+              value={streamer}
+              onClick={onClick}
+            />
+          : null}
+        <Button accent label="Remove" value={streamer} onClick={onRemove} />
+      </CardActions>
+    </div>
+  );
+
+  // Return appropriate online or offline card based on
+  // ... whether or not a link to watch the stream was provided
+  if (onClick) {
+    return (
+      <OnlineCard raised>
+        {children}
+      </OnlineCard>
+    );
+  } else {
+    return (
+      <OfflineCard raised>
+        {children}
+      </OfflineCard>
+    );
+  }
+};
 
 @observer class StreamerCard extends Component {
   constructor() {
     super();
 
     this.state = {
-      streamsData: null,
       channelData: null,
       loading: true,
       error: null
@@ -68,43 +93,18 @@ const MaterialCard = ({ streamer, onClick, picture, status, onRemove }) => (
       }
     };
 
-    console.log(`Fetching information for ${streamer}`);
+    console.log(`Fetching status and picture information for ${streamer}`);
 
     axios
       .get(`https://api.twitch.tv/kraken/channels/${streamer}`, config)
       .then(res => {
         this.setState({
-          channelsData: res.data
+          channelsData: res.data,
+          loading: false
         });
-
-        if (this.state.streamsData) {
-          this.setState({
-            loading: false
-          });
-        }
       })
       .catch(error => {
-        console.log(error);
-        this.setState({
-          error: JSON.stringify(error)
-        });
-      });
-
-    axios
-      .get(`https://api.twitch.tv/kraken/streams/${streamer}`, config)
-      .then(res => {
-        this.setState({
-          streamsData: res.data
-        });
-
-        if (this.state.channelsData) {
-          this.setState({
-            loading: false
-          });
-        }
-      })
-      .catch(error => {
-        console.log(error);
+        console.error(error);
         this.setState({
           error: JSON.stringify(error)
         });
@@ -113,13 +113,10 @@ const MaterialCard = ({ streamer, onClick, picture, status, onRemove }) => (
 
   componentDidMount() {
     this.fetchInformation();
-
-    // Fetch information periodically
-    setInterval(this.fetchInformation, 300000);
   }
 
   render() {
-    const { streamer } = this.props;
+    const { streamer, isOnline } = this.props;
 
     if (this.state.error) {
       return (
@@ -138,8 +135,6 @@ const MaterialCard = ({ streamer, onClick, picture, status, onRemove }) => (
         />
       );
     }
-
-    const isOnline = this.state.streamsData.stream !== null;
 
     return (
       <MaterialCard
