@@ -50,6 +50,16 @@ import StreamerCard from './StreamerCard';
     });
   }
 
+  componentDidUpdate() {
+    const { favorites } = this.state;
+    const { store } = this.props;
+
+    favorites.forEach(item => {
+      if (item.online) store.setOnline(item.streamer);
+      else store.setOffline(item.streamer);
+    });
+  }
+
   render() {
     const { store } = this.props;
     const { favorites } = this.state;
