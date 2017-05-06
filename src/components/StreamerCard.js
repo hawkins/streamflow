@@ -93,8 +93,6 @@ const MaterialCard = ({ streamer, onClick, picture, status, onRemove }) => {
       }
     };
 
-    console.log(`Fetching status and picture information for ${streamer}`);
-
     axios
       .get(`https://api.twitch.tv/kraken/channels/${streamer}`, config)
       .then(res => {
@@ -104,7 +102,7 @@ const MaterialCard = ({ streamer, onClick, picture, status, onRemove }) => {
         });
       })
       .catch(error => {
-        console.error(error);
+        console.error(`An error occurred fetching channel data for ${streamer}`, error);
         this.setState({
           error: JSON.stringify(error)
         });
