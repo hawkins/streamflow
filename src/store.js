@@ -2,6 +2,7 @@ import { observable } from 'mobx';
 
 export default class Store {
   @observable channel = 'cohhcarnage';
+  @observable onlineChannels = [];
   @observable favorites = [
     'cohhcarnage',
     'loserfruit',
@@ -27,6 +28,39 @@ export default class Store {
     const index = this.favorites.indexOf(channel);
     if (index !== -1) this.favorites.splice(index, 1);
     this.saveConfig();
+
+    // Remove from onlineChannels
+    const onlineIndex = this.onlineChannels.indexOf(channel);
+    if (onlineIndex !== -1) this.onlineChannels.splice(onlineIndex, 1);
+
+    // If we just removed our current channel, get a new one
+    if (channel === this.channel) {
+      this.selectFirstOnlineStreamer();
+    }
+  }
+
+  setOnline(channel) {
+    if (this.onlineChannels.indexOf(channel) === -1)
+      this.onlineChannels.push(channel);
+
+    this.selectFirstOnlineStreamer();
+  }
+
+  setOffline(channel) {
+    const index = this.onlineChannels.indexOf(channel);
+    if (index !== -1) this.onlineChannels.splice(index, 1);
+
+    this.selectFirstOnlineStreamer();
+  }
+
+  selectFirstOnlineStreamer() {
+    // Only change channel if current is not online and there is at least 1 online channel
+    if (
+      this.onlineChannels.length > 0 &&
+      this.onlineChannels.indexOf(this.channel) === -1
+    ) {
+      this.channel = this.onlineChannels[0];
+    }
   }
 
   loadConfig(config) {
@@ -36,7 +70,6 @@ export default class Store {
 
   saveConfig() {
     const config = { favorites: this.favorites.$mobx.values };
-
     this.ipc.send('config save', config);
   }
 }

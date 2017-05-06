@@ -21,12 +21,10 @@ import StreamerCard from './StreamerCard';
     autorun(this.fetchInformation);
 
     // Poll for online status every so often
-    setInterval(this.fetchInformation, 300000);
+    setInterval(this.fetchInformation, 60000);
   }
 
   fetchInformation() {
-    console.log('Fetching stream information for all favorites');
-
     const { favorites } = this.props.store;
     const config = {
       headers: {
@@ -37,16 +35,30 @@ import StreamerCard from './StreamerCard';
     Promise.all(
       favorites.map(streamer =>
         axios.get(`https://api.twitch.tv/kraken/streams/${streamer}`, config))
-    ).then(values => {
-      // Get list of streamers names and whether they are online or not
-      let results = values.map((item, i) => ({
-        streamer: favorites[i],
-        online: item.data.stream !== null
-      }));
+    )
+      .then(values => {
+        // Get list of streamers names and whether they are online or not
+        let results = values.map((item, i) => ({
+          streamer: favorites[i],
+          online: item.data.stream !== null
+        }));
 
-      this.setState({
-        favorites: results
+        this.setState({
+          favorites: results
+        });
+      })
+      .catch(err => {
+        console.error('An error occurred during fetching streamer status', err);
       });
+  }
+
+  componentDidUpdate() {
+    const { favorites } = this.state;
+    const { store } = this.props;
+
+    favorites.forEach(item => {
+      if (item.online) store.setOnline(item.streamer);
+      else store.setOffline(item.streamer);
     });
   }
 
