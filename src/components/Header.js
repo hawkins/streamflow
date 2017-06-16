@@ -1,8 +1,10 @@
-import React from 'react';
-import styled from 'styled-components';
-import logo from '../assets/Glitch_Black_RGB.svg';
+import React from "react";
+import styled from "styled-components";
+import logo from "../assets/Twitch_White_RGB.png";
 
-const headerSize = '80px';
+const headerSizePx = 80;
+const headerSize = `${headerSizePx}px`;
+const spacing = "20px";
 
 const Header = styled.div`
   background: #6441A4;
@@ -14,23 +16,32 @@ const Header = styled.div`
 const Title = styled.h1`
   line-height: ${headerSize};
   font-size: 3.5em;
-  margin: 0;
+  margin-top: 0;
+  margin-bottom: 0;
   float: left;
+  margin-left: ${spacing};
+  font-style: italic;
+`;
+
+const Subtitle = Title.extend`
+  color: rgba(189, 195, 199, 0.7);
+  font-style: normal;
 `;
 
 const Logo = styled.img`
-  width: ${headerSize};
-  height: ${headerSize};
+  height: ${headerSizePx - 30}px;
+  margin: 15px 0 15px ${spacing};
   float: left;
 `;
 
-export default () => {
-  return (
-    <Header>
-      <Logo src={logo} />
-      <Title>
-        Twitch Flow
-      </Title>
-    </Header>
-  );
-};
+export default () => (
+  <Header>
+    <Title>
+      Streamflow
+    </Title>
+    <Subtitle>
+      with
+    </Subtitle>
+    <Logo src={logo} />
+  </Header>
+);
