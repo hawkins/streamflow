@@ -1,6 +1,7 @@
 import React from "react";
 import styled from "styled-components";
-import logo from "../assets/Twitch_White_RGB.png";
+import twitchLogo from "../assets/Twitch_White_RGB.png";
+import streamflowLogo from "../assets/Streamflow-no-outline.png";
 
 const headerSizePx = 80;
 const headerSize = `${headerSizePx}px`;
@@ -20,6 +21,7 @@ const Title = styled.h1`
   margin-bottom: 0;
   float: left;
   margin-left: ${spacing};
+  text-shadow: 0 2px rgba(189, 195, 199, 0.4);
   font-style: italic;
 `;
 
@@ -28,20 +30,27 @@ const Subtitle = Title.extend`
   font-style: normal;
 `;
 
-const Logo = styled.img`
+const StreamflowLogo = styled.img`
+  height: ${headerSizePx - 20}px;
+  margin: 0;
+  margin: 10px 0 10px ${spacing};
+  float: left;
+`;
+
+const TwitchLogo = StreamflowLogo.extend`
   height: ${headerSizePx - 30}px;
   margin: 15px 0 15px ${spacing};
-  float: left;
 `;
 
 export default () => (
   <Header>
+    <StreamflowLogo src={streamflowLogo} />
     <Title>
       Streamflow
     </Title>
     <Subtitle>
       with
     </Subtitle>
-    <Logo src={logo} />
+    <TwitchLogo src={twitchLogo} />
   </Header>
 );
