@@ -15,3 +15,6 @@ build
 npm-debug.log
 
 .idea
+
+# electron builder
+dist
