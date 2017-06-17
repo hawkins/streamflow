@@ -42,10 +42,7 @@ import StreamerCard from "./StreamerCard";
         // Get list of streamers names and whether they are online or not
         const results = values.map(({ data }, i) => ({
           streamer: favorites[i],
-          online: data.stream !== null,
-          viewers: data.stream ? data.stream.viewers : 0,
-          followers: data.stream ? data.stream.channel.followers : 0,
-          views: data.stream ? data.stream.channel.views : 0
+          online: data.stream !== null
         }));
 
         this.setState({ favorites: results });
@@ -62,7 +59,6 @@ import StreamerCard from "./StreamerCard";
     favorites.forEach(item => {
       if (item.online) store.setOnline(item.streamer);
       else store.setOffline(item.streamer);
-      store.updateChannel(item);
     });
   }
 

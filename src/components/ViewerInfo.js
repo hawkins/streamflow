@@ -1,5 +1,7 @@
 import React from "react";
 import { observer } from "mobx-react";
+import { autorun } from "mobx";
+import axios from "axios";
 import FaEye from "react-icons/lib/fa/eye";
 import FaUser from "react-icons/lib/fa/user";
 import FaHeart from "react-icons/lib/fa/heart";
@@ -53,24 +55,75 @@ const Grouping = styled.div`
   }
 `;
 
-export default observer(({ store: { channelViewInfo, channel } }) => {
-  if (channelViewInfo && channel && channelViewInfo[channel]) {
+@observer
+export default class ViewerInfo extends React.Component {
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      views: 0,
+      followers: 0,
+      viewers: 0
+    };
+
+    this.fetchInformation = this.fetchInformation.bind(this);
+  }
+
+  componentDidMount() {
+    autorun(this.fetchInformation);
+    setInterval(this.fetchInformation, 10000);
+  }
+
+  fetchInformation() {
+    const { channel, setOffline } = this.props.store;
+    const config = {
+      headers: {
+        "Client-ID": "gc6rul66vivvwv6qwj98v529l9mpyo"
+      }
+    };
+
+    console.log("Fetching channel view info for", channel);
+
+    axios
+      .get(`https://api.twitch.tv/kraken/streams/${channel}`, config)
+      .then(res => {
+        if (res.data.stream)
+          this.setState({
+            viewers: res.data.stream.viewers,
+            followers: res.data.stream.channel.followers,
+            views: res.data.stream.channel.views
+          });
+        else {
+          console.warn("It appears the current channel has gone offline");
+          setOffline(channel);
+        }
+      })
+      .catch(err =>
+        console.error(
+          "An error occurred during fetching channel viewer info",
+          err
+        )
+      );
+  }
+
+  render() {
+    const { views, viewers, followers } = this.state;
+
     return (
       <ViewContainer>
         <Grouping>
           <User />
-          <WhiteText>{channelViewInfo[channel].viewers}</WhiteText>
+          <WhiteText>{viewers}</WhiteText>
         </Grouping>
         <Grouping>
           <Heart />
-          <GreyText>{channelViewInfo[channel].followers}</GreyText>
+          <GreyText>{followers}</GreyText>
         </Grouping>
         <Grouping>
           <Eye />
-          <GreyText>{channelViewInfo[channel].views}</GreyText>
+          <GreyText>{views}</GreyText>
         </Grouping>
       </ViewContainer>
     );
   }
-  return null;
-});
+}

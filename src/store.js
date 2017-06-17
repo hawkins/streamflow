@@ -10,10 +10,15 @@ export default class Store {
     "aimbotcalvin"
   ];
 
-  @observable channelViewInfo = {};
-
   constructor(ipc) {
     this.setChannel = this.setChannel.bind(this);
+    this.addFavorite = this.addFavorite.bind(this);
+    this.removeFavorite = this.removeFavorite.bind(this);
+    this.selectFirstOnlineStreamer = this.selectFirstOnlineStreamer.bind(this);
+    this.setOnline = this.setOnline.bind(this);
+    this.setOffline = this.setOffline.bind(this);
+    this.loadConfig = this.loadConfig.bind(this);
+    this.saveConfig = this.saveConfig.bind(this);
     this.ipc = ipc;
   }
 
@@ -53,10 +58,6 @@ export default class Store {
     if (index !== -1) this.onlineChannels.splice(index, 1);
 
     this.selectFirstOnlineStreamer();
-  }
-
-  updateChannel({ streamer, viewers, followers, views }) {
-    this.channelViewInfo[streamer] = { viewers, followers, views };
   }
 
   selectFirstOnlineStreamer() {
