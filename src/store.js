@@ -1,14 +1,16 @@
-import { observable } from 'mobx';
+import { observable } from "mobx";
 
 export default class Store {
-  @observable channel = 'cohhcarnage';
+  @observable channel = "cohhcarnage";
   @observable onlineChannels = [];
   @observable favorites = [
-    'cohhcarnage',
-    'loserfruit',
-    'koalibears',
-    'aimbotcalvin'
+    "cohhcarnage",
+    "loserfruit",
+    "koalibears",
+    "aimbotcalvin"
   ];
+
+  @observable channelViewInfo = {};
 
   constructor(ipc) {
     this.setChannel = this.setChannel.bind(this);
@@ -53,6 +55,10 @@ export default class Store {
     this.selectFirstOnlineStreamer();
   }
 
+  updateChannel({ streamer, viewers, followers, views }) {
+    this.channelViewInfo[streamer] = { viewers, followers, views };
+  }
+
   selectFirstOnlineStreamer() {
     // Only change channel if current is not online and there is at least 1 online channel
     if (
@@ -70,6 +76,6 @@ export default class Store {
 
   saveConfig() {
     const config = { favorites: this.favorites.$mobx.values };
-    this.ipc.send('config save', config);
+    this.ipc.send("config save", config);
   }
 }

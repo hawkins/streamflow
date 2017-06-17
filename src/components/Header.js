@@ -2,6 +2,9 @@ import React from "react";
 import styled from "styled-components";
 import twitchLogo from "../assets/Twitch_White_RGB.png";
 import streamflowLogo from "../assets/Streamflow-no-outline.png";
+import ViewerInfo from "./ViewerInfo";
+
+const BREAKPOINT_NARROW = "830px";
 
 const headerSizePx = 80;
 const headerSize = `${headerSizePx}px`;
@@ -12,6 +15,7 @@ const Header = styled.div`
   color: #ecf0f1;
   width: 100%;
   height: ${headerSize};
+  box-shadow: inset 0 -4px 8px -4px black
 `;
 
 const Title = styled.h1`
@@ -23,6 +27,14 @@ const Title = styled.h1`
   margin-left: ${spacing};
   text-shadow: 0 2px rgba(189, 195, 199, 0.4);
   font-style: italic;
+`;
+
+const DesktopView = styled.div`
+  @media (max-width: ${BREAKPOINT_NARROW}) {
+    & {
+      display: none;
+    }
+  }
 `;
 
 const Subtitle = Title.extend`
@@ -42,15 +54,18 @@ const TwitchLogo = StreamflowLogo.extend`
   margin: 15px 0 15px ${spacing};
 `;
 
-export default () => (
+export default ({ store }) => (
   <Header>
     <StreamflowLogo src={streamflowLogo} />
     <Title>
       Streamflow
     </Title>
-    <Subtitle>
-      with
-    </Subtitle>
-    <TwitchLogo src={twitchLogo} />
+    <DesktopView>
+      <Subtitle>
+        with
+      </Subtitle>
+      <TwitchLogo src={twitchLogo} />
+    </DesktopView>
+    <ViewerInfo store={store} />
   </Header>
 );
