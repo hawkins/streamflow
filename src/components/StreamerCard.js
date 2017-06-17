@@ -1,9 +1,9 @@
-import React, { Component } from 'react';
-import { observer } from 'mobx-react';
-import styled from 'styled-components';
-import { Card, CardTitle, CardActions, CardText } from 'react-toolbox/lib/card';
-import Button from 'react-toolbox/lib/button/Button';
-import axios from 'axios';
+import React, { Component } from "react";
+import { observer } from "mobx-react";
+import styled from "styled-components";
+import { Card, CardTitle, CardActions, CardText } from "react-toolbox/lib/card";
+import Button from "react-toolbox/lib/button/Button";
+import axios from "axios";
 
 const OnlineCard = styled(Card)`
   background: #555555;
@@ -21,12 +21,30 @@ const OfflineCard = styled(Card)`
   flex: 0 0 auto;
 `;
 
-const MaterialCard = ({ streamer, onClick, picture, status, onRemove }) => {
+const StyledCardTitle = styled(CardTitle)`
+  & * {
+    text-align: left;
+  }
+  & p {
+    color: #b9c0c0 !important;
+  }
+`;
+
+const MaterialCard = ({
+  streamer,
+  onClick,
+  picture,
+  status,
+  onRemove,
+  game
+}) => {
   const children = (
     <div>
-      {picture
-        ? <CardTitle title={streamer} avatar={picture} />
-        : <CardTitle title={streamer} />}
+      <StyledCardTitle
+        title={streamer}
+        avatar={picture ? picture : null}
+        subtitle={onClick ? game : null}
+      />
       <CardText>
         {status}
       </CardText>
@@ -89,7 +107,7 @@ const MaterialCard = ({ streamer, onClick, picture, status, onRemove }) => {
     const { streamer } = this.props;
     const config = {
       headers: {
-        'Client-ID': 'gc6rul66vivvwv6qwj98v529l9mpyo'
+        "Client-ID": "gc6rul66vivvwv6qwj98v529l9mpyo"
       }
     };
 
@@ -102,7 +120,10 @@ const MaterialCard = ({ streamer, onClick, picture, status, onRemove }) => {
         });
       })
       .catch(error => {
-        console.error(`An error occurred fetching channel data for ${streamer}`, error);
+        console.error(
+          `An error occurred fetching channel data for ${streamer}`,
+          error
+        );
         this.setState({
           error: JSON.stringify(error)
         });
@@ -139,6 +160,7 @@ const MaterialCard = ({ streamer, onClick, picture, status, onRemove }) => {
         streamer={streamer}
         picture={this.state.channelsData.logo}
         status={this.state.channelsData.status}
+        game={this.state.channelsData.game}
         onClick={isOnline ? this.handleFavoriteClick : null}
         onRemove={this.handleRemoveClick}
       />
