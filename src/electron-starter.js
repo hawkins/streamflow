@@ -1,10 +1,10 @@
-const { app, BrowserWindow, ipcMain } = require('electron');
-const path = require('path');
-const url = require('url');
-const fs = require('fs');
-const os = require('os');
+const { app, BrowserWindow, ipcMain } = require("electron");
+const path = require("path");
+const url = require("url");
+const fs = require("fs");
+const os = require("os");
 
-const CONFIG_FILE_PATH = `${os.homedir()}/.twitch-flow.json`;
+const CONFIG_FILE_PATH = `${os.homedir()}/.streamflow.json`;
 let config = undefined;
 
 function loadConfig() {
@@ -17,18 +17,18 @@ function loadConfig() {
           throw err;
         } else {
           config = JSON.parse(data);
-          console.log('Loaded config', config);
-          mainWindow.webContents.send('config', config);
+          console.log("Loaded config", config);
+          mainWindow.webContents.send("config", config);
         }
       });
     } else {
       // Write the file
       config = {
-        favorites: ['cohhcarnage', 'loserfruit', 'koalibears', 'aimbotcalvin']
+        favorites: ["cohhcarnage", "loserfruit", "koalibears", "aimbotcalvin"]
       };
       saveConfig(config, data => {
-        console.log('Wrote config', data);
-        mainWindow.webContents.send('config', data);
+        console.log("Wrote config", data);
+        mainWindow.webContents.send("config", data);
       });
     }
   });
@@ -56,16 +56,17 @@ function createWindow() {
   });
 
   // and load the index.html of the app.
-  const startUrl = process.env.ELECTRON_START_URL ||
+  const startUrl =
+    process.env.ELECTRON_START_URL ||
     url.format({
-      pathname: path.join(__dirname, '/../build/index.html'),
-      protocol: 'file:',
+      pathname: path.join(__dirname, "/../build/index.html"),
+      protocol: "file:",
       slashes: true
     });
   mainWindow.loadURL(startUrl);
 
   // Emitted when the window is closed.
-  mainWindow.on('closed', function() {
+  mainWindow.on("closed", function() {
     // Dereference the window object, usually you would store windows
     // in an array if your app supports multi windows, this is the time
     // when you should delete the corresponding element.
@@ -73,13 +74,13 @@ function createWindow() {
   });
 
   // Handle client requesting user config
-  ipcMain.on('config request', loadConfig);
+  ipcMain.on("config request", loadConfig);
 
   // Handle client requesting to save config
-  ipcMain.on('config save', (e, data) => {
+  ipcMain.on("config save", (e, data) => {
     saveConfig(data, data => {
       config = data;
-      console.log('Wrote config', config);
+      console.log("Wrote config", config);
     });
   });
 }
@@ -87,18 +88,18 @@ function createWindow() {
 // This method will be called when Electron has finished
 // initialization and is ready to create browser windows.
 // Some APIs can only be used after this event occurs.
-app.on('ready', createWindow);
+app.on("ready", createWindow);
 
 // Quit when all windows are closed.
-app.on('window-all-closed', function() {
+app.on("window-all-closed", function() {
   // On OS X it is common for applications and their menu bar
   // to stay active until the user quits explicitly with Cmd + Q
-  if (process.platform !== 'darwin') {
+  if (process.platform !== "darwin") {
     app.quit();
   }
 });
 
-app.on('activate', function() {
+app.on("activate", function() {
   // On OS X it's common to re-create a window in the app when the
   // dock icon is clicked and there are no other windows open.
   if (mainWindow === null) {
