@@ -1,12 +1,13 @@
-import React, { Component } from 'react';
-import { observer } from 'mobx-react';
-import { autorun } from 'mobx';
-import axios from 'axios';
-import StreamerCard from './StreamerCard';
+import React, { Component } from "react";
+import { observer } from "mobx-react";
+import { autorun } from "mobx";
+import axios from "axios";
+import StreamerCard from "./StreamerCard";
 
 @observer class FavoriteStreamers extends Component {
   constructor(props) {
     super(props);
+
     this.state = {
       favorites: props.store.favorites.map(item => ({
         streamer: item,
@@ -28,27 +29,29 @@ import StreamerCard from './StreamerCard';
     const { favorites } = this.props.store;
     const config = {
       headers: {
-        'Client-ID': 'gc6rul66vivvwv6qwj98v529l9mpyo'
+        "Client-ID": "gc6rul66vivvwv6qwj98v529l9mpyo"
       }
     };
 
     Promise.all(
       favorites.map(streamer =>
-        axios.get(`https://api.twitch.tv/kraken/streams/${streamer}`, config))
+        axios.get(`https://api.twitch.tv/kraken/streams/${streamer}`, config)
+      )
     )
       .then(values => {
         // Get list of streamers names and whether they are online or not
-        let results = values.map((item, i) => ({
+        const results = values.map(({ data }, i) => ({
           streamer: favorites[i],
-          online: item.data.stream !== null
+          online: data.stream !== null,
+          viewers: data.stream ? data.stream.viewers : 0,
+          followers: data.stream ? data.stream.channel.followers : 0,
+          views: data.stream ? data.stream.channel.views : 0
         }));
 
-        this.setState({
-          favorites: results
-        });
+        this.setState({ favorites: results });
       })
       .catch(err => {
-        console.error('An error occurred during fetching streamer status', err);
+        console.error("An error occurred during fetching streamer status", err);
       });
   }
 
@@ -59,6 +62,7 @@ import StreamerCard from './StreamerCard';
     favorites.forEach(item => {
       if (item.online) store.setOnline(item.streamer);
       else store.setOffline(item.streamer);
+      store.updateChannel(item);
     });
   }
 
