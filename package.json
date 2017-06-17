@@ -1,5 +1,7 @@
 {
   "name": "Streamflow",
+  "description": "Watch your favorite Twitch streamers without any downtime",
+  "author": "Josh Hawkins <hawkinswritescode@gmail.com",
   "version": "0.1.0",
   "private": true,
   "devDependencies": {
@@ -17,6 +19,8 @@
     "css-loader": "0.26.0",
     "detect-port": "1.0.1",
     "dotenv": "2.0.0",
+    "electron": "^1.6.11",
+    "electron-builder": "^18.6.2",
     "eslint": "3.8.1",
     "eslint-config-react-app": "^0.5.0",
     "eslint-loader": "1.6.0",
@@ -50,7 +54,6 @@
   },
   "dependencies": {
     "axios": "^0.16.1",
-    "electron": "^1.6.2",
     "mobx": "^3.1.9",
     "mobx-react": "^4.1.7",
     "react": "^15.4.2",
@@ -68,7 +71,26 @@
     "test": "node scripts/test.js --env=jsdom",
     "electron": "electron .",
     "toolbox": "react-toolbox-themr",
-    "dev": "nf start -p 3000"
+    "dev": "nf start -p 3000",
+    "pack": "build --dir",
+    "dist": "build",
+    "package": "npm run build && npm run dist",
+    "postinstall": "install-app-deps"
+  },
+  "build": {
+    "appId": "com.hawkins.streamflow",
+    "productName": "Streamflow",
+    "mac": {
+      "category": "public.app-category.entertainment",
+      "icon": "public/Streamflow-outline.icns"
+    },
+    "win": {
+      "icon": "public/Streamflow-outline.ico"
+    },
+    "linux": {},
+    "directories": {
+      "buildResources": "public"
+    }
   },
   "jest": {
     "collectCoverageFrom": [
