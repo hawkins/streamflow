@@ -73,7 +73,8 @@
     "toolbox": "react-toolbox-themr",
     "dev": "nf start -p 3000",
     "pack": "build --dir",
-    "dist": "npm run build && build",
+    "dist": "build",
+    "package": "npm run build && npm run dist",
     "postinstall": "install-app-deps"
   },
   "build": {
@@ -83,6 +84,10 @@
       "category": "public.app-category.entertainment",
       "icon": "public/Streamflow-outline.icns"
     },
+    "win": {
+      "icon": "public/Streamflow-outline.ico"
+    },
+    "linux": {},
     "directories": {
       "buildResources": "public"
     }
