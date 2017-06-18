@@ -11,27 +11,51 @@ export default class Store {
   ];
 
   constructor(ipc) {
-    this.setChannel = this.setChannel.bind(this);
-    this.addFavorite = this.addFavorite.bind(this);
-    this.removeFavorite = this.removeFavorite.bind(this);
-    this.selectFirstOnlineStreamer = this.selectFirstOnlineStreamer.bind(this);
-    this.setOnline = this.setOnline.bind(this);
-    this.setOffline = this.setOffline.bind(this);
-    this.loadConfig = this.loadConfig.bind(this);
-    this.saveConfig = this.saveConfig.bind(this);
     this.ipc = ipc;
   }
 
-  setChannel(channel) {
-    this.channel = channel;
-  }
+  setChannel = channel => (this.channel = channel);
 
-  addFavorite(channel) {
+  syncWithUser = async username => {
+    let total;
+    let found = 0;
+    let newFavorites = [];
+
+    const config = {
+      headers: {
+        "Client-ID": "gc6rul66vivvwv6qwj98v529l9mpyo"
+      }
+    };
+
+    while (!total || found < total) {
+      console.log(`Syncing favorites with user ${username}`);
+      let res = await fetch(
+        `https://api.twitch.tv/kraken/users/${username}/follows/channels?offset=${found}`,
+        config
+      );
+      let data = await res.json();
+
+      total = data._total;
+      found += data.follows.length;
+      console.log(`> Found ${found} follows so far`);
+
+      newFavorites = newFavorites.concat(
+        data.follows.map(({ channel }) => channel.name)
+      );
+    }
+
+    console.log(`Synced ${found} favorites`);
+    this.favorites = newFavorites;
+    this.onlineChannels = [];
+    this.saveConfig();
+  };
+
+  addFavorite = channel => {
     this.favorites.push(channel);
     this.saveConfig();
-  }
+  };
 
-  removeFavorite(channel) {
+  removeFavorite = channel => {
     const index = this.favorites.indexOf(channel);
     if (index !== -1) this.favorites.splice(index, 1);
     this.saveConfig();
@@ -44,23 +68,23 @@ export default class Store {
     if (channel === this.channel) {
       this.selectFirstOnlineStreamer();
     }
-  }
+  };
 
-  setOnline(channel) {
+  setOnline = channel => {
     if (this.onlineChannels.indexOf(channel) === -1)
       this.onlineChannels.push(channel);
 
     this.selectFirstOnlineStreamer();
-  }
+  };
 
-  setOffline(channel) {
+  setOffline = channel => {
     const index = this.onlineChannels.indexOf(channel);
     if (index !== -1) this.onlineChannels.splice(index, 1);
 
     this.selectFirstOnlineStreamer();
-  }
+  };
 
-  selectFirstOnlineStreamer() {
+  selectFirstOnlineStreamer = () => {
     // Only change channel if current is not online and there is at least 1 online channel
     if (
       this.onlineChannels.length > 0 &&
@@ -68,15 +92,15 @@ export default class Store {
     ) {
       this.channel = this.onlineChannels[0];
     }
-  }
+  };
 
-  loadConfig(config) {
+  loadConfig = config => {
     this.favorites = config.favorites;
     this.channel = config.favorites[0];
-  }
+  };
 
-  saveConfig() {
+  saveConfig = () => {
     const config = { favorites: this.favorites.$mobx.values };
     this.ipc.send("config save", config);
-  }
+  };
 }
