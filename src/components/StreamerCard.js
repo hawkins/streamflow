@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import { observer } from "mobx-react";
 import styled from "styled-components";
 import { Card, CardTitle, CardActions, CardText } from "react-toolbox/lib/card";
+import { Avatar } from "react-toolbox/lib/avatar";
 import Button from "react-toolbox/lib/button/Button";
 import axios from "axios";
 
@@ -30,6 +31,19 @@ const StyledCardTitle = styled(CardTitle)`
   }
 `;
 
+const StyledAvatar = styled(Avatar)`
+  flex-shrink: 0;
+`;
+
+const StyledTitle = styled.h5`
+  margin: 0;
+  padding: 0;
+  font-size: 1.4rem;
+  font-weight: 400;
+  word-wrap: break-word;
+  word-break: break-all;
+`;
+
 const MaterialCard = ({
   streamer,
   onClick,
@@ -41,8 +55,8 @@ const MaterialCard = ({
   const children = (
     <div>
       <StyledCardTitle
-        title={streamer}
-        avatar={picture ? picture : null}
+        title={<StyledTitle>{streamer}</StyledTitle>}
+        avatar={picture ? <StyledAvatar image={picture} /> : null}
         subtitle={onClick ? game : null}
       />
       <CardText>
