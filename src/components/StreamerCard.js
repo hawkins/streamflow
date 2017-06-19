@@ -114,7 +114,7 @@ const MaterialCard = ({
   }
 
   handleRemoveClick(e) {
-    this.props.store.removeFavorite(e.target.value);
+    this.props.store.removeFavorite(this.props.streamer);
   }
 
   fetchInformation() {
@@ -169,12 +169,14 @@ const MaterialCard = ({
       );
     }
 
+    const { display_name, logo, status, game } = this.state.channelsData;
+
     return (
       <MaterialCard
-        streamer={streamer}
-        picture={this.state.channelsData.logo}
-        status={this.state.channelsData.status}
-        game={this.state.channelsData.game}
+        streamer={display_name}
+        picture={logo}
+        status={status}
+        game={game}
         onClick={isOnline ? this.handleFavoriteClick : null}
         onRemove={this.handleRemoveClick}
       />
