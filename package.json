@@ -49,11 +49,9 @@
     "url-loader": "0.5.7",
     "webpack": "1.14.0",
     "webpack-dev-server": "1.16.2",
-    "webpack-manifest-plugin": "1.1.0",
-    "whatwg-fetch": "1.0.0"
+    "webpack-manifest-plugin": "1.1.0"
   },
   "dependencies": {
-    "axios": "^0.16.1",
     "mobx": "^3.1.9",
     "mobx-react": "^4.1.7",
     "react": "^15.4.2",

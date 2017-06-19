@@ -1,7 +1,6 @@
 import React from "react";
 import { observer } from "mobx-react";
 import { autorun } from "mobx";
-import axios from "axios";
 import FaEye from "react-icons/lib/fa/eye";
 import FaUser from "react-icons/lib/fa/user";
 import FaHeart from "react-icons/lib/fa/heart";
@@ -84,14 +83,14 @@ export default class ViewerInfo extends React.Component {
 
     console.log("Fetching channel view info for", channel);
 
-    axios
-      .get(`https://api.twitch.tv/kraken/streams/${channel}`, config)
-      .then(res => {
-        if (res.data.stream)
+    fetch(`https://api.twitch.tv/kraken/streams/${channel}`, config)
+      .then(res => res.json())
+      .then(results => {
+        if (results.stream)
           this.setState({
-            viewers: res.data.stream.viewers,
-            followers: res.data.stream.channel.followers,
-            views: res.data.stream.channel.views
+            viewers: results.stream.viewers,
+            followers: results.stream.channel.followers,
+            views: results.stream.channel.views
           });
         else {
           console.warn("It appears the current channel has gone offline");

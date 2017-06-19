@@ -4,7 +4,6 @@ import styled from "styled-components";
 import { Card, CardTitle, CardActions, CardText } from "react-toolbox/lib/card";
 import { Avatar } from "react-toolbox/lib/avatar";
 import Button from "react-toolbox/lib/button/Button";
-import axios from "axios";
 
 const OnlineCard = styled(Card)`
   background: #555555;
@@ -125,11 +124,11 @@ const MaterialCard = ({
       }
     };
 
-    axios
-      .get(`https://api.twitch.tv/kraken/channels/${streamer}`, config)
-      .then(res => {
+    fetch(`https://api.twitch.tv/kraken/channels/${streamer}`, config)
+      .then(res => res.json())
+      .then(results => {
         this.setState({
-          channelsData: res.data,
+          channelsData: results,
           loading: false
         });
       })

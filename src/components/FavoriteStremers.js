@@ -1,7 +1,6 @@
 import React, { Component } from "react";
 import { observer } from "mobx-react";
 import { autorun } from "mobx";
-import axios from "axios";
 import StreamerCard from "./StreamerCard";
 
 @observer class FavoriteStreamers extends Component {
@@ -35,14 +34,17 @@ import StreamerCard from "./StreamerCard";
 
     Promise.all(
       favorites.map(streamer =>
-        axios.get(`https://api.twitch.tv/kraken/streams/${streamer}`, config)
+        fetch(
+          `https://api.twitch.tv/kraken/streams/${streamer}`,
+          config
+        ).then(res => res.json())
       )
     )
       .then(values => {
         // Get list of streamers names and whether they are online or not
-        const results = values.map(({ data }, i) => ({
+        const results = values.map(({ stream }, i) => ({
           streamer: favorites[i],
-          online: data.stream !== null
+          online: stream !== null
         }));
 
         this.setState({ favorites: results });
