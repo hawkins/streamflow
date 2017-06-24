@@ -1,14 +1,19 @@
-import React, { Component } from "react";
+import React from "react";
+import PropTypes from "prop-types";
 import { observer } from "mobx-react";
 import { autorun } from "mobx";
 import StreamerCard from "./StreamerCard";
 
-@observer class FavoriteStreamers extends Component {
-  constructor(props) {
-    super(props);
+@observer class FavoriteStreamers extends React.Component {
+  static contextTypes = {
+    store: PropTypes.object
+  };
+
+  constructor(props, context) {
+    super(props, context);
 
     this.state = {
-      favorites: props.store.favorites.map(item => ({
+      favorites: context.store.favorites.map(item => ({
         streamer: item,
         online: false
       }))
@@ -25,7 +30,7 @@ import StreamerCard from "./StreamerCard";
   }
 
   fetchInformation() {
-    const { favorites } = this.props.store;
+    const { store: { favorites } } = this.context;
     const config = {
       headers: {
         "Client-ID": "gc6rul66vivvwv6qwj98v529l9mpyo"
@@ -56,7 +61,7 @@ import StreamerCard from "./StreamerCard";
 
   componentDidUpdate() {
     const { favorites } = this.state;
-    const { store } = this.props;
+    const { store } = this.context;
 
     favorites.forEach(item => {
       if (item.online) store.setOnline(item.streamer);
@@ -65,7 +70,6 @@ import StreamerCard from "./StreamerCard";
   }
 
   render() {
-    const { store } = this.props;
     const { favorites } = this.state;
     const onlineStreamers = favorites.filter(item => item.online);
     const offlineStreamers = favorites.filter(item => !item.online);
@@ -81,7 +85,6 @@ import StreamerCard from "./StreamerCard";
                   key={item.streamer}
                   streamer={item.streamer}
                   isOnline={item.online}
-                  store={store}
                 />
               ))}
             </div>
@@ -96,7 +99,6 @@ import StreamerCard from "./StreamerCard";
                   key={item.streamer}
                   streamer={item.streamer}
                   isOnline={item.online}
-                  store={store}
                 />
               ))}
             </div>

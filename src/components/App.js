@@ -1,26 +1,34 @@
-import React, { Component } from "react";
+import React from "react";
+import PropTypes from "prop-types";
 import styled from "styled-components";
 import ThemeProvider from "react-toolbox/lib/ThemeProvider";
 import theme from "../toolbox/theme";
 import "../toolbox/theme.css";
 import Header from "./Header";
 import Sidebar from "./Sidebar";
-import Main from "./Main";
+import Player from "./Player";
 
 const Container = styled.div`
   text-align: center;
   height: 100%;
 `;
 
-class App extends Component {
+class App extends React.Component {
+  static childContextTypes = {
+    store: PropTypes.object
+  };
+
+  getChildContext() {
+    return { store: this.props.store };
+  }
+
   render() {
-    const { store } = this.props;
     return (
       <ThemeProvider theme={theme}>
         <Container>
-          <Header store={store} />
-          <Sidebar store={store} />
-          <Main store={store} />
+          <Header />
+          <Sidebar />
+          <Player />
         </Container>
       </ThemeProvider>
     );

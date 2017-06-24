@@ -1,5 +1,5 @@
-import React, { Component } from "react";
-import { observer } from "mobx-react";
+import React from "react";
+import PropTypes from "prop-types";
 import styled from "styled-components";
 import { Card, CardTitle, CardActions, CardText } from "react-toolbox/lib/card";
 import { Avatar } from "react-toolbox/lib/avatar";
@@ -93,7 +93,11 @@ const MaterialCard = ({
   }
 };
 
-@observer class StreamerCard extends Component {
+class StreamerCard extends React.Component {
+  static contextTypes = {
+    store: PropTypes.object
+  };
+
   constructor() {
     super();
 
@@ -109,11 +113,13 @@ const MaterialCard = ({
   }
 
   handleFavoriteClick(e) {
-    this.props.store.setChannel(e.target.value);
+    const { store } = this.context;
+    store.setChannel(e.target.value);
   }
 
   handleRemoveClick(e) {
-    this.props.store.removeFavorite(this.props.streamer);
+    const { store } = this.context;
+    store.removeFavorite(this.props.streamer);
   }
 
   fetchInformation() {

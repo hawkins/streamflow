@@ -1,4 +1,5 @@
-import React, { Component } from "react";
+import React from "react";
+import PropTypes from "prop-types";
 import styled from "styled-components";
 import Input from "react-toolbox/lib/input";
 import { Card, CardTitle, CardActions, CardText } from "react-toolbox/lib/card";
@@ -19,7 +20,11 @@ const StyledCard = styled(Card)`
   flex: 0 0 auto;
 `;
 
-export default class Controls extends Component {
+export default class Controls extends React.Component {
+  static contextTypes = {
+    store: PropTypes.object
+  };
+
   constructor() {
     super();
 
@@ -39,8 +44,9 @@ export default class Controls extends Component {
   }
 
   handleNewFavoriteClick() {
+    const { store } = this.context;
     const { newFavorite } = this.state;
-    if (newFavorite) this.props.store.addFavorite(newFavorite);
+    if (newFavorite) store.addFavorite(newFavorite);
     this.setState({ newFavorite: "" });
   }
 
@@ -49,8 +55,9 @@ export default class Controls extends Component {
   }
 
   handleSyncClick() {
+    const { store } = this.context;
     const { username } = this.state;
-    if (username) this.props.store.syncWithUser(username);
+    if (username) store.syncWithUser(username);
     this.setState({ username: "" });
   }
 
