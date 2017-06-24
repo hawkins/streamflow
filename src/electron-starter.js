@@ -1,5 +1,10 @@
 const { app, BrowserWindow, ipcMain, TouchBar } = require("electron");
-const { TouchBarLabel, TouchBarButton, TouchBarSpacer } = TouchBar;
+const {
+  TouchBarLabel,
+  TouchBarButton,
+  TouchBarSpacer,
+  TouchBarScrubber
+} = TouchBar;
 const path = require("path");
 const url = require("url");
 const fs = require("fs");
@@ -55,22 +60,21 @@ function saveConfig(data, callback) {
 }
 
 function updateTouchBar(channels) {
-  let buttons = [];
-  channels.map(channel => {
-    buttons.push(
-      new TouchBarButton({
-        label: channel,
-        backgroundColor: "#7851A9",
-        click: () => {
-          console.log(`Clicked ${channel}`);
-          mainWindow.webContents.send("select channel", channel);
-        }
-      })
-    );
-    buttons.push(new TouchBarSpacer({ size: "small" }));
-  });
+  let scrubberItems = channels.map(channel => ({ label: channel }));
 
-  touchBar = new TouchBar(buttons);
+  touchBar = new TouchBar([
+    new TouchBarLabel({ label: "Streamflow" }),
+    new TouchBarLabel({ label: `${channels.length} channels online` }),
+    new TouchBarScrubber({
+      items: scrubberItems,
+      mode: "free",
+      showArrowButtons: true,
+      selectedStyle: "background",
+      continuous: false,
+      select: index =>
+        mainWindow.webContents.send("select channel", channels[index])
+    })
+  ]);
   mainWindow.setTouchBar(touchBar);
 }
 
