@@ -1,9 +1,14 @@
-import React, { Component } from 'react';
-import { observer } from 'mobx-react';
+import React from "react";
+import PropTypes from "prop-types";
+import { observer } from "mobx-react";
 
-@observer class Player extends Component {
+@observer class Player extends React.Component {
+  static contextTypes = {
+    store: PropTypes.object
+  };
+
   render() {
-    const { channel } = this.props.store;
+    const { channel } = this.context.store;
     return (
       <iframe
         src={`http://player.twitch.tv/?channel=${channel}`}
@@ -11,7 +16,7 @@ import { observer } from 'mobx-react';
         height="100%"
         allowFullScreen="true"
         frameBorder="0"
-        style={{ display: 'block' }}
+        style={{ display: "block" }}
       />
     );
   }

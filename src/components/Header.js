@@ -1,4 +1,5 @@
 import React from "react";
+import PropTypes from "prop-types";
 import styled from "styled-components";
 import twitchLogo from "../assets/Twitch_White_RGB.png";
 import streamflowLogo from "../assets/Streamflow-no-outline.png";
@@ -10,7 +11,7 @@ const headerSizePx = 80;
 const headerSize = `${headerSizePx}px`;
 const spacing = "20px";
 
-const Header = styled.div`
+const Container = styled.div`
   background: #6441A4;
   color: #ecf0f1;
   width: 100%;
@@ -54,8 +55,8 @@ const TwitchLogo = StreamflowLogo.extend`
   margin: 15px 0 15px ${spacing};
 `;
 
-export default ({ store }) => (
-  <Header>
+const Header = (props, { store }) => (
+  <Container>
     <StreamflowLogo src={streamflowLogo} />
     <Title>
       Streamflow
@@ -67,5 +68,9 @@ export default ({ store }) => (
       <TwitchLogo src={twitchLogo} />
     </DesktopView>
     <ViewerInfo store={store} />
-  </Header>
+  </Container>
 );
+
+Header.contextTypes = { store: PropTypes.object };
+
+export default Header;

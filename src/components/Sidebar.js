@@ -1,5 +1,4 @@
-import React, { Component } from "react";
-import { observer } from "mobx-react";
+import React from "react";
 import styled from "styled-components";
 import Controls from "./Controls";
 import FavoriteStreamers from "./FavoriteStremers";
@@ -30,16 +29,9 @@ const Side = styled.div`
   }
 `;
 
-@observer class Sidebar extends Component {
-  render() {
-    const { store } = this.props;
-    return (
-      <Side>
-        <Controls store={store} />
-        <FavoriteStreamers store={store} />
-      </Side>
-    );
-  }
-}
-
-export default Sidebar;
+export default () => (
+  <Side>
+    <Controls />
+    <FavoriteStreamers />
+  </Side>
+);

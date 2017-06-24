@@ -1,4 +1,5 @@
 import React from "react";
+import PropTypes from "prop-types";
 import { observer } from "mobx-react";
 import { autorun } from "mobx";
 import FaEye from "react-icons/lib/fa/eye";
@@ -56,8 +57,12 @@ const Grouping = styled.div`
 
 @observer
 export default class ViewerInfo extends React.Component {
-  constructor(props) {
-    super(props);
+  static contextTypes = {
+    store: PropTypes.object
+  };
+
+  constructor() {
+    super();
 
     this.state = {
       views: 0,
@@ -74,7 +79,7 @@ export default class ViewerInfo extends React.Component {
   }
 
   fetchInformation() {
-    const { channel, setOffline } = this.props.store;
+    const { channel, setOffline } = this.context.store;
     const config = {
       headers: {
         "Client-ID": "gc6rul66vivvwv6qwj98v529l9mpyo"
