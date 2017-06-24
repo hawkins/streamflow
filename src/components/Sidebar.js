@@ -1,7 +1,7 @@
 import React from "react";
 import styled from "styled-components";
 import Controls from "./Controls";
-import FavoriteStreamers from "./FavoriteStremers";
+import FavoriteStreamers from "./FavoriteStreamers";
 
 const Side = styled.div`
   float:left;
