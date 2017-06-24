@@ -79,7 +79,7 @@ export default class ViewerInfo extends React.Component {
   }
 
   fetchInformation() {
-    const { channel, setOffline } = this.context.store;
+    const { store: { channel, setOffline } } = this.context;
     const config = {
       headers: {
         "Client-ID": "gc6rul66vivvwv6qwj98v529l9mpyo"

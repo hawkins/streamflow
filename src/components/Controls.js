@@ -44,8 +44,9 @@ export default class Controls extends React.Component {
   }
 
   handleNewFavoriteClick() {
+    const { store } = this.context;
     const { newFavorite } = this.state;
-    if (newFavorite) this.context.store.addFavorite(newFavorite);
+    if (newFavorite) store.addFavorite(newFavorite);
     this.setState({ newFavorite: "" });
   }
 
@@ -54,8 +55,9 @@ export default class Controls extends React.Component {
   }
 
   handleSyncClick() {
+    const { store } = this.context;
     const { username } = this.state;
-    if (username) this.context.store.syncWithUser(username);
+    if (username) store.syncWithUser(username);
     this.setState({ username: "" });
   }
 

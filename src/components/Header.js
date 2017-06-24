@@ -67,7 +67,7 @@ const Header = (props, { store }) => (
       </Subtitle>
       <TwitchLogo src={twitchLogo} />
     </DesktopView>
-    <ViewerInfo store={store} />
+    <ViewerInfo />
   </Container>
 );
 

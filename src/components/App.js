@@ -6,7 +6,7 @@ import theme from "../toolbox/theme";
 import "../toolbox/theme.css";
 import Header from "./Header";
 import Sidebar from "./Sidebar";
-import Main from "./Main";
+import Player from "./Player";
 
 const Container = styled.div`
   text-align: center;
@@ -28,7 +28,7 @@ class App extends React.Component {
         <Container>
           <Header />
           <Sidebar />
-          <Main />
+          <Player />
         </Container>
       </ThemeProvider>
     );

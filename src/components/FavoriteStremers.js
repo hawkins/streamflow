@@ -30,7 +30,7 @@ import StreamerCard from "./StreamerCard";
   }
 
   fetchInformation() {
-    const { favorites } = this.context.store;
+    const { store: { favorites } } = this.context;
     const config = {
       headers: {
         "Client-ID": "gc6rul66vivvwv6qwj98v529l9mpyo"
@@ -70,7 +70,6 @@ import StreamerCard from "./StreamerCard";
   }
 
   render() {
-    const { store } = this.context;
     const { favorites } = this.state;
     const onlineStreamers = favorites.filter(item => item.online);
     const offlineStreamers = favorites.filter(item => !item.online);
@@ -86,7 +85,6 @@ import StreamerCard from "./StreamerCard";
                   key={item.streamer}
                   streamer={item.streamer}
                   isOnline={item.online}
-                  store={store}
                 />
               ))}
             </div>
@@ -101,7 +99,6 @@ import StreamerCard from "./StreamerCard";
                   key={item.streamer}
                   streamer={item.streamer}
                   isOnline={item.online}
-                  store={store}
                 />
               ))}
             </div>

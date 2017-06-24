@@ -113,11 +113,13 @@ class StreamerCard extends React.Component {
   }
 
   handleFavoriteClick(e) {
-    this.context.store.setChannel(e.target.value);
+    const { store } = this.context;
+    store.setChannel(e.target.value);
   }
 
   handleRemoveClick(e) {
-    this.context.store.removeFavorite(this.props.streamer);
+    const { store } = this.context;
+    store.removeFavorite(this.props.streamer);
   }
 
   fetchInformation() {
