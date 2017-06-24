@@ -1,4 +1,5 @@
-const { app, BrowserWindow, ipcMain } = require("electron");
+const { app, BrowserWindow, ipcMain, TouchBar } = require("electron");
+const { TouchBarLabel, TouchBarButton, TouchBarSpacer } = TouchBar;
 const path = require("path");
 const url = require("url");
 const fs = require("fs");
@@ -10,6 +11,10 @@ const DEFAULT_CONFIG = {
   alwaysOnTop: true
 };
 
+let mainWindow;
+let touchBar = new TouchBar([
+  new TouchBarLabel({ label: "Loading online channels..." })
+]);
 let config;
 
 function loadConfig() {
@@ -49,9 +54,25 @@ function saveConfig(data, callback) {
   });
 }
 
-// Keep a global reference of the window object, if you don't, the window will
-// be closed automatically when the JavaScript object is garbage collected.
-let mainWindow;
+function updateTouchBar(channels) {
+  let buttons = [];
+  channels.map(channel => {
+    buttons.push(
+      new TouchBarButton({
+        label: channel,
+        backgroundColor: "#7851A9",
+        click: () => {
+          console.log(`Clicked ${channel}`);
+          mainWindow.webContents.send("select channel", channel);
+        }
+      })
+    );
+    buttons.push(new TouchBarSpacer({ size: "small" }));
+  });
+
+  touchBar = new TouchBar(buttons);
+  mainWindow.setTouchBar(touchBar);
+}
 
 function createWindow() {
   // Create the browser window.
@@ -61,6 +82,7 @@ function createWindow() {
     autoHideMenuBar: true,
     alwaysOnTop: config.alwaysOnTop
   });
+  mainWindow.setTouchBar(touchBar);
 
   // and load the index.html of the app.
   const startUrl =
@@ -91,6 +113,11 @@ ipcMain.on("config save", (e, data) => {
   // Update config and add any missing keys
   config = Object.assign({}, DEFAULT_CONFIG, config, data);
   saveConfig(config);
+});
+
+// Handle client providing online channels
+ipcMain.on("online channels", (e, data) => {
+  updateTouchBar(data);
 });
 
 loadConfig()
