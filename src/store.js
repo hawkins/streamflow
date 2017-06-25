@@ -12,11 +12,12 @@ export default class Store {
 
   constructor(ipc) {
     this.ipc = ipc;
-
-    ipc.on("select channel", (e, channel) => this.setChannel(channel));
   }
 
-  setChannel = channel => (this.channel = channel);
+  setChannel = channel => {
+    this.channel = channel;
+    this.ipc.send("select channel", channel);
+  };
 
   syncWithUser = async username => {
     let total;
@@ -97,7 +98,7 @@ export default class Store {
       this.onlineChannels.length > 0 &&
       this.onlineChannels.indexOf(this.channel) === -1
     ) {
-      this.channel = this.onlineChannels[0];
+      this.setChannel(this.onlineChannels[0]);
     }
   };
 

@@ -19,6 +19,7 @@ No logins, no bullshit. Just open the app and get back to your day.
 - Sleek material design interface
 - *Semi*-responsive layout
 - Optionally always-on-top for easy multitasking
+- MacOS Touch Bar support
 
 ## Config
 

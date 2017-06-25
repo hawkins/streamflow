@@ -1,10 +1,5 @@
 const { app, BrowserWindow, ipcMain, TouchBar } = require("electron");
-const {
-  TouchBarLabel,
-  TouchBarButton,
-  TouchBarSpacer,
-  TouchBarScrubber
-} = TouchBar;
+const { TouchBarLabel, TouchBarSpacer } = TouchBar;
 const path = require("path");
 const url = require("url");
 const fs = require("fs");
@@ -16,11 +11,32 @@ const DEFAULT_CONFIG = {
   alwaysOnTop: true
 };
 
-let mainWindow;
-let touchBar = new TouchBar([
-  new TouchBarLabel({ label: "Loading online channels..." })
-]);
 let config;
+let mainWindow;
+
+const labelColor = "#FF4081";
+const nameLabel = new TouchBarLabel({ label: "Streamflow" });
+const channelsOnlineLabel = new TouchBarLabel({ label: "channels online" });
+const spacer = new TouchBarSpacer({ size: "large" });
+const watchingLabel = new TouchBarLabel({ label: "Watching" });
+let channelsCountLabel = new TouchBarLabel({
+  label: "0",
+  textColor: labelColor
+});
+let currentChannelLabel = new TouchBarLabel({
+  label: "No channel selected",
+  textColor: labelColor
+});
+
+let touchBar = new TouchBar([
+  nameLabel,
+  spacer,
+  channelsCountLabel,
+  channelsOnlineLabel,
+  spacer,
+  watchingLabel,
+  currentChannelLabel
+]);
 
 function loadConfig() {
   return new Promise((resolve, reject) => {
@@ -59,22 +75,35 @@ function saveConfig(data, callback) {
   });
 }
 
-function updateTouchBar(channels) {
-  let scrubberItems = channels.map(channel => ({ label: channel }));
+function updateTouchBarCurrentChannelLabel(channel) {
+  currentChannelLabel = new TouchBarLabel({
+    label: channel,
+    textColor: labelColor
+  });
 
+  updateTouchBar();
+}
+
+function updateTouchBarChannelsCountLabel(channels) {
+  channelsCountLabel = new TouchBarLabel({
+    label: channels.length.toString(),
+    textColor: labelColor
+  });
+
+  updateTouchBar();
+}
+
+function updateTouchBar(channels) {
   touchBar = new TouchBar([
-    new TouchBarLabel({ label: "Streamflow" }),
-    new TouchBarLabel({ label: `${channels.length} channels online` }),
-    new TouchBarScrubber({
-      items: scrubberItems,
-      mode: "free",
-      showArrowButtons: true,
-      selectedStyle: "background",
-      continuous: false,
-      select: index =>
-        mainWindow.webContents.send("select channel", channels[index])
-    })
+    nameLabel,
+    spacer,
+    channelsCountLabel,
+    channelsOnlineLabel,
+    spacer,
+    watchingLabel,
+    currentChannelLabel
   ]);
+
   mainWindow.setTouchBar(touchBar);
 }
 
@@ -120,9 +149,14 @@ ipcMain.on("config save", (e, data) => {
 });
 
 // Handle client providing online channels
-ipcMain.on("online channels", (e, data) => {
-  updateTouchBar(data);
-});
+ipcMain.on("online channels", (e, data) =>
+  updateTouchBarChannelsCountLabel(data)
+);
+
+// Handle client providing online channels
+ipcMain.on("select channel", (e, data) =>
+  updateTouchBarCurrentChannelLabel(data)
+);
 
 loadConfig()
   .then(() => {
