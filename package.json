@@ -2,7 +2,7 @@
   "name": "Streamflow",
   "description": "Watch your favorite Twitch streamers without any downtime",
   "author": "Josh Hawkins <hawkinswritescode@gmail.com",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "private": true,
   "devDependencies": {
     "autoprefixer": "6.5.1",
