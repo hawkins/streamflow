@@ -1,3 +1,4 @@
+const { exec, spawn } = require("child_process");
 const net = require("net");
 const port = process.env.PORT ? process.env.PORT - 100 : 3000;
 
@@ -12,8 +13,12 @@ const tryConnection = () =>
     if (!startedElectron) {
       console.log("starting electron");
       startedElectron = true;
-      const spawn = require("child_process").spawn;
-      const runner = spawn("npm", ["run", "electron"]);
+
+      let runner;
+      if (process.platform === "win32") exec("npm run electron");
+      else spawn("npm", ["run", "electron"]);
+
+      if (!runner) return;
 
       runner.stdout.on("data", function(data) {
         console.log(data.toString());
