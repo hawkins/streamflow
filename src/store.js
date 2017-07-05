@@ -1,24 +1,21 @@
-import { observable } from "mobx";
+import { action, observable } from "mobx";
 
 export default class Store {
   @observable channel = "cohhcarnage";
   @observable onlineChannels = [];
-  @observable favorites = [
-    "cohhcarnage",
-    "loserfruit",
-    "koalibears",
-    "aimbotcalvin"
-  ];
+  @observable favorites = [];
 
   constructor(ipc) {
     this.ipc = ipc;
   }
 
+  @action
   setChannel = channel => {
-    this.channel = channel;
+    this.channel = channel.toLowerCase();
     this.ipc.send("select channel", channel);
   };
 
+  @action
   syncWithUser = async username => {
     let total;
     let found = 0;
@@ -53,11 +50,13 @@ export default class Store {
     this.saveConfig();
   };
 
+  @action
   addFavorite = channel => {
     this.favorites.push(channel);
     this.saveConfig();
   };
 
+  @action
   removeFavorite = channel => {
     const index = this.favorites.indexOf(channel);
     if (index !== -1) this.favorites.splice(index, 1);
@@ -69,19 +68,21 @@ export default class Store {
 
     // If we just removed our current channel, get a new one
     if (channel === this.channel) {
-      this.selectFirstOnlineStreamer();
+      this.selectOnlineChannel();
     }
   };
 
+  @action
   setOnline = channel => {
     if (this.onlineChannels.indexOf(channel) === -1) {
       this.onlineChannels.push(channel);
       this.ipc.send("online channels", this.onlineChannels.slice());
     }
 
-    this.selectFirstOnlineStreamer();
+    this.selectOnlineChannel();
   };
 
+  @action
   setOffline = channel => {
     const index = this.onlineChannels.indexOf(channel);
     if (index !== -1) {
@@ -89,24 +90,25 @@ export default class Store {
       this.ipc.send("online channels", this.onlineChannels.slice());
     }
 
-    this.selectFirstOnlineStreamer();
+    this.selectOnlineChannel();
   };
 
-  selectFirstOnlineStreamer = () => {
+  selectOnlineChannel = () => {
     // Only change channel if current is not online and there is at least 1 online channel
     if (
       this.onlineChannels.length > 0 &&
       this.onlineChannels.indexOf(this.channel) === -1
-    ) {
+    )
       this.setChannel(this.onlineChannels[0]);
-    }
   };
 
+  @action
   loadConfig = config => {
-    this.favorites = config.favorites;
-    this.channel = config.favorites[0];
+    this.favorites = config.favorites.map(a => a.toLowerCase());
+    this.channel = config.favorites[0].toLowerCase();
   };
 
+  @action
   saveConfig = () => {
     const config = { favorites: this.favorites.$mobx.values };
     this.ipc.send("config save", config);
