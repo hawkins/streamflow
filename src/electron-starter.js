@@ -1,9 +1,33 @@
-const { app, BrowserWindow, ipcMain, TouchBar } = require("electron");
+const {
+  app,
+  autoUpdater,
+  BrowserWindow,
+  ipcMain,
+  TouchBar
+} = require("electron");
 const { TouchBarLabel, TouchBarSpacer } = TouchBar;
 const path = require("path");
 const url = require("url");
 const fs = require("fs");
 const os = require("os");
+
+const server = "streamflow-releases.now.sh";
+const feed = `${server}/update/${process.platform}/${app.getVersion()}`;
+
+autoUpdater.setFeedURL(feed);
+
+autoUpdater.on("checking-for-update", () => console.log("Checking for update"));
+autoUpdater.on("update-available", () => console.log("Update available"));
+autoUpdater.on("update-not-available", () =>
+  console.log("Update not available")
+);
+
+autoUpdater.on("update-downloaded", () => {
+  console.log("Update downloaded");
+  autoUpdater.quitAndInstall();
+});
+
+autoUpdater.checkForUpdates();
 
 const CONFIG_FILE_PATH = `${os.homedir()}/.streamflow.json`;
 const DEFAULT_CONFIG = {
