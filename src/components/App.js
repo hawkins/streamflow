@@ -8,6 +8,7 @@ import "../toolbox/theme.css";
 import Header from "./Header";
 import Sidebar from "./Sidebar";
 import Player from "./Player";
+import Updater from "./Updater";
 
 let MaybeDevTools = () => null;
 if (process.env.NODE_ENV !== "production") MaybeDevTools = DevTools;
@@ -34,6 +35,7 @@ class App extends React.Component {
           <Header />
           <Sidebar />
           <Player />
+          <Updater />
         </Container>
       </ThemeProvider>
     );

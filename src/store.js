@@ -4,19 +4,18 @@ export default class Store {
   @observable channel = "cohhcarnage";
   @observable onlineChannels = [];
   @observable favorites = [];
+  @observable updateDownloaded = false;
 
   constructor(ipc) {
     this.ipc = ipc;
   }
 
-  @action
-  setChannel = channel => {
+  @action setChannel = channel => {
     this.channel = channel.toLowerCase();
     this.ipc.send("select channel", channel);
   };
 
-  @action
-  syncWithUser = async username => {
+  @action syncWithUser = async username => {
     let total;
     let found = 0;
     let newFavorites = [];
@@ -50,14 +49,12 @@ export default class Store {
     this.saveConfig();
   };
 
-  @action
-  addFavorite = channel => {
+  @action addFavorite = channel => {
     this.favorites.push(channel);
     this.saveConfig();
   };
 
-  @action
-  removeFavorite = channel => {
+  @action removeFavorite = channel => {
     const index = this.favorites.indexOf(channel);
     if (index !== -1) this.favorites.splice(index, 1);
     this.saveConfig();
@@ -72,8 +69,7 @@ export default class Store {
     }
   };
 
-  @action
-  setOnline = channel => {
+  @action setOnline = channel => {
     if (this.onlineChannels.indexOf(channel) === -1) {
       this.onlineChannels.push(channel);
       this.ipc.send("online channels", this.onlineChannels.slice());
@@ -82,8 +78,7 @@ export default class Store {
     this.selectOnlineChannel();
   };
 
-  @action
-  setOffline = channel => {
+  @action setOffline = channel => {
     const index = this.onlineChannels.indexOf(channel);
     if (index !== -1) {
       this.onlineChannels.splice(index, 1);
@@ -102,15 +97,21 @@ export default class Store {
       this.setChannel(this.onlineChannels[0]);
   };
 
-  @action
-  loadConfig = config => {
+  @action loadConfig = config => {
     this.favorites = config.favorites.map(a => a.toLowerCase());
     this.channel = config.favorites[0].toLowerCase();
   };
 
-  @action
-  saveConfig = () => {
+  @action saveConfig = () => {
     const config = { favorites: this.favorites.$mobx.values };
     this.ipc.send("config save", config);
+  };
+
+  @action promptUserToUpdate = () => {
+    this.updateDownloaded = true;
+  };
+
+  @action initiateUpdate = () => {
+    this.ipc.send("install-update");
   };
 }
