@@ -11,10 +11,16 @@ const url = require("url");
 const fs = require("fs");
 const os = require("os");
 
+const prod = process.env.NODE_ENV === "production";
+
 // Configure auto updater
 const server = "streamflow-releases.now.sh";
-const feed = `${server}/update/${process.platform}/${app.getVersion()}`;
-autoUpdater.setFeedURL(feed);
+const feed = `https://${server}/update/${process.platform}/${app.getVersion()}`;
+
+if (prod) {
+  console.log(`Looking for releases on ${feed}`);
+  autoUpdater.setFeedURL(feed);
+}
 
 // Configure user configuration
 const CONFIG_FILE_PATH = `${os.homedir()}/.streamflow.json`;
@@ -198,7 +204,7 @@ loadConfig()
     if (!mainWindow) createWindow();
 
     // Wait to look for updates to make sure we can tell the user about them
-    autoUpdater.checkForUpdates();
+    if (prod) autoUpdater.checkForUpdates();
 
     // This method will be called when Electron has finished
     // initialization and is ready to create browser windows.
