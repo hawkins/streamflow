@@ -16,7 +16,7 @@ const tryConnection = () =>
 
       let runner;
       if (process.platform === "win32") exec("npm run electron");
-      else spawn("npm", ["run", "electron"]);
+      else runner = spawn("npm", ["run", "electron"]);
 
       if (!runner) return;
 

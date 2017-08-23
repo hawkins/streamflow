@@ -1,10 +1,28 @@
-const { app, BrowserWindow, ipcMain, TouchBar } = require("electron");
+const {
+  app,
+  autoUpdater,
+  BrowserWindow,
+  ipcMain,
+  TouchBar
+} = require("electron");
 const { TouchBarLabel, TouchBarSpacer } = TouchBar;
 const path = require("path");
 const url = require("url");
 const fs = require("fs");
 const os = require("os");
 
+const prod = process.env.NODE_ENV === "production";
+
+// Configure auto updater
+const server = "streamflow-releases.now.sh";
+const feed = `https://${server}/update/${process.platform}/${app.getVersion()}`;
+
+if (prod) {
+  console.log(`Looking for releases on ${feed}`);
+  autoUpdater.setFeedURL(feed);
+}
+
+// Configure user configuration
 const CONFIG_FILE_PATH = `${os.homedir()}/.streamflow.json`;
 const DEFAULT_CONFIG = {
   favorites: ["cohhcarnage", "loserfruit", "koalibears", "aimbotcalvin"],
@@ -158,9 +176,35 @@ ipcMain.on("select channel", (e, data) =>
   updateTouchBarCurrentChannelLabel(data)
 );
 
+// Handle auto updater checking for updates
+autoUpdater.on("checking-for-update", () => console.log("Checking for update"));
+
+// Handle auto updater finding a new update
+autoUpdater.on("update-available", () => console.log("Update available"));
+
+// Handle auto updater not finding a new update
+autoUpdater.on("update-not-available", () =>
+  console.log("Update not available")
+);
+
+// Handle auto updater ready to install update
+autoUpdater.on("update-downloaded", () => {
+  console.log("Update downloaded");
+
+  if (mainWindow) mainWindow.webContents.send("update-downloaded");
+  else setTimeout(() => mainWindow.webContents.send("update-downloaded"), 1000);
+});
+
+// Handle client requesting to update app
+ipcMain.on("install-update", () => autoUpdater.quitAndInstall());
+
+// Load the user's configuration and start the app
 loadConfig()
   .then(() => {
     if (!mainWindow) createWindow();
+
+    // Wait to look for updates to make sure we can tell the user about them
+    if (prod) autoUpdater.checkForUpdates();
 
     // This method will be called when Electron has finished
     // initialization and is ready to create browser windows.

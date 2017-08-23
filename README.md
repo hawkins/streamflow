@@ -32,9 +32,10 @@ While you should never have to edit this file yourself (and be **very** careful 
 
 ## Supported platforms
 
-- MacOS (Tested MacOS Sierra 10.12.5)
-- Windows (Tested Windows 10)
+- MacOS (Tested MacOS Sierra 10.12.5) [download](https://streamflow-releases.now.sh/download/darwin)
+- Windows (Tested Windows 10) [download](https://streamflow-releases.now.sh/download/win32)
 - Linux (not yet tested)
+  - Note for linux you'll need to follow instructions below to build the app from source
 
 ## Package from source
 
