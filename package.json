@@ -85,11 +85,8 @@
       "category": "public.app-category.entertainment",
       "icon": "public/Streamflow-outline.icns"
     },
-    "squirrelWindows": {},
     "win": {
-      "target": [
-        "squirrel"
-      ],
+      "target": ["squirrel"],
       "publisherName": "JoshHawkins",
       "certificateFile": "./certs/streamflow.pfx",
       "certificatePassword": "",
@@ -101,12 +98,8 @@
     }
   },
   "jest": {
-    "collectCoverageFrom": [
-      "src/**/*.{js,jsx}"
-    ],
-    "setupFiles": [
-      "<rootDir>/config/polyfills.js"
-    ],
+    "collectCoverageFrom": ["src/**/*.{js,jsx}"],
+    "setupFiles": ["<rootDir>/config/polyfills.js"],
     "testPathIgnorePatterns": [
       "<rootDir>[/\\\\](build|docs|node_modules)[/\\\\]"
     ],
@@ -117,20 +110,14 @@
       "^.+\\.css$": "<rootDir>/config/jest/cssTransform.js",
       "^(?!.*\\.(js|jsx|css|json)$)": "<rootDir>/config/jest/fileTransform.js"
     },
-    "transformIgnorePatterns": [
-      "[/\\\\]node_modules[/\\\\].+\\.(js|jsx)$"
-    ],
+    "transformIgnorePatterns": ["[/\\\\]node_modules[/\\\\].+\\.(js|jsx)$"],
     "moduleNameMapper": {
       "^react-native$": "react-native-web"
     }
   },
   "babel": {
-    "presets": [
-      "react-app"
-    ],
-    "plugins": [
-      "transform-decorators-legacy"
-    ]
+    "presets": ["react-app"],
+    "plugins": ["transform-decorators-legacy"]
   },
   "eslintConfig": {
     "extends": "react-app"

@@ -203,6 +203,8 @@ loadConfig()
   .then(() => {
     if (!mainWindow) createWindow();
 
+    mainWindow.toggleDevTools();
+
     // Wait to look for updates to make sure we can tell the user about them
     if (prod) autoUpdater.checkForUpdates();
 
