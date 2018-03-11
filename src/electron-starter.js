@@ -25,7 +25,7 @@ if (prod) {
 // Configure user configuration
 const CONFIG_FILE_PATH = `${os.homedir()}/.streamflow.json`;
 const DEFAULT_CONFIG = {
-  favorites: ["cohhcarnage", "loserfruit", "koalibears", "aimbotcalvin"],
+  favorites: ["cohhcarnage", "loserfruit", "hawkinjs", "aimbotcalvin"],
   alwaysOnTop: true
 };
 
